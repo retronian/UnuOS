@@ -1306,7 +1306,7 @@ int main (int argc, char *argv[]) {
 	
 	simple_mode = exists(SIMPLE_MODE_PATH);
 
-	LOG_info("MinUI\n");
+	LOG_info("OneOS\n");
 	InitSettings();
 	
 	SDL_Surface* screen = GFX_init(MODE_MAIN);

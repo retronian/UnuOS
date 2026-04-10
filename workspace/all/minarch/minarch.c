@@ -3566,7 +3566,7 @@ static int OptionQuicksave_onConfirm(MenuList* list, int i) {
 static MenuList options_menu = {
 	.type = MENU_LIST,
 	.items = (MenuItem[]) {
-		{"Frontend", "MinUI (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
+		{"Frontend", "OneOS (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
 		{"Emulator",.on_confirm=OptionEmulator_openMenu},
 		{"Controls",.on_confirm=OptionControls_openMenu},
 		{"Shortcuts",.on_confirm=OptionShortcuts_openMenu}, 
