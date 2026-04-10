@@ -227,17 +227,25 @@ FALLBACK_IMPLEMENTATION void PLAT_setEffectColor(int next_color) { }
 
 int GFX_truncateText(TTF_Font* font, const char* in_name, char* out_name, int max_width, int padding) {
 	int text_width;
+	int keep_len = strlen(in_name); // bytes of in_name to keep (before any ellipsis)
 	strcpy(out_name, in_name);
 	TTF_SizeUTF8(font, out_name, &text_width, NULL);
 	text_width += padding;
-	
-	while (text_width>max_width) {
-		int len = strlen(out_name);
-		strcpy(&out_name[len-4], "...\0");
+
+	while (text_width>max_width && keep_len>0) {
+		// walk back one UTF-8 codepoint in in_name
+		keep_len--;
+		while (keep_len>0 && (in_name[keep_len] & 0xC0)==0x80) keep_len--;
+		if (keep_len<=0) break;
+
+		// rebuild out_name = in_name[0..keep_len] + "..."
+		memcpy(out_name, in_name, keep_len);
+		strcpy(&out_name[keep_len], "...");
+
 		TTF_SizeUTF8(font, out_name, &text_width, NULL);
 		text_width += padding;
 	}
-	
+
 	return text_width;
 }
 int GFX_wrapText(TTF_Font* font, char* str, int max_width, int max_lines) {
