@@ -18,6 +18,7 @@
 #include "api.h"
 #include "utils.h"
 #include "scaler.h"
+#include "lang.h"
 
 ///////////////////////////////////////
 
@@ -3062,15 +3063,26 @@ void Menu_init(void) {
 	menu.overlay = SDL_CreateRGBSurface(SDL_SWSURFACE,DEVICE_WIDTH,DEVICE_HEIGHT,FIXED_DEPTH,RGBA_MASK_AUTO);
 	SDLX_SetAlpha(menu.overlay, SDL_SRCALPHA, 0x80);
 	SDL_FillRect(menu.overlay, NULL, 0);
-	
+
+	// localized in-game menu items
+	menu.items[ITEM_CONT] = (char*)lang.continue_;
+	menu.items[ITEM_SAVE] = (char*)lang.save;
+	menu.items[ITEM_LOAD] = (char*)lang.load;
+	menu.items[ITEM_OPTS] = (char*)lang.options;
+	menu.items[ITEM_QUIT] = (char*)lang.quit;
+
+	// localized shortcut names
+	config.shortcuts[SHORTCUT_SAVE_STATE].name = (char*)lang.save_state;
+	config.shortcuts[SHORTCUT_LOAD_STATE].name = (char*)lang.load_state;
+
 	char emu_name[256];
 	getEmuName(game.path, emu_name);
 	sprintf(menu.minui_dir, SHARED_USERDATA_PATH "/.minui/%s", emu_name);
 	mkdir(menu.minui_dir, 0755);
 
 	sprintf(menu.slot_path, "%s/%s.txt", menu.minui_dir, game.name);
-	
-	if (simple_mode) menu.items[ITEM_OPTS] = "Reset";
+
+	if (simple_mode) menu.items[ITEM_OPTS] = (char*)lang.reset;
 	
 	if (game.m3u_path[0]) {
 		char* tmp;
@@ -3563,19 +3575,27 @@ static int OptionQuicksave_onConfirm(MenuList* list, int i) {
 	PWR_powerOff();
 }
 
-static MenuList options_menu = {
+MenuList options_menu = {
 	.type = MENU_LIST,
 	.items = (MenuItem[]) {
 		{"Frontend", "OneOS (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
 		{"Emulator",.on_confirm=OptionEmulator_openMenu},
 		{"Controls",.on_confirm=OptionControls_openMenu},
-		{"Shortcuts",.on_confirm=OptionShortcuts_openMenu}, 
+		{"Shortcuts",.on_confirm=OptionShortcuts_openMenu},
 		{"Save Changes",.on_confirm=OptionSaveChanges_openMenu},
 		{NULL},
 		{NULL},
 		{NULL},
 	}
 };
+
+static void OptionsMenu_localize(void) {
+	options_menu.items[0].name = (char*)lang.frontend;
+	options_menu.items[1].name = (char*)lang.emulator;
+	options_menu.items[2].name = (char*)lang.controls;
+	options_menu.items[3].name = (char*)lang.shortcuts;
+	options_menu.items[4].name = (char*)lang.save_changes;
+}
 
 static void OptionSaveChanges_updateDesc(void) {
 	options_menu.items[4].desc = getSaveDesc();
@@ -4727,6 +4747,7 @@ int main(int argc , char* argv[]) {
 	SND_init(core.sample_rate, core.fps);
 	InitSettings(); // after we initialize audio
 	Menu_init();
+	OptionsMenu_localize();
 	State_resume();
 	Menu_initState(); // make ready for state shortcuts
 	

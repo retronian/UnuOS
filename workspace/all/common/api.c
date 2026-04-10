@@ -17,6 +17,7 @@
 #include "defines.h"
 #include "api.h"
 #include "utils.h"
+#include "lang.h"
 
 ///////////////////////////////
 
@@ -91,10 +92,12 @@ static struct PWR_Context {
 static int _;
 
 SDL_Surface* GFX_init(int mode) {
+	Lang_init();
+
 	// TODO: this doesn't really belong here...
 	// tried adding to PWR_init() but that was no good (not sure why)
 	PLAT_initLid();
-	
+
 	gfx.screen = PLAT_initVideo();
 	gfx.vsync = VSYNC_STRICT;
 	gfx.mode = mode;
@@ -152,10 +155,10 @@ SDL_Surface* GFX_init(int mode) {
 	gfx.assets = IMG_Load(asset_path);
 	
 	TTF_Init();
-	font.large 	= TTF_OpenFont(FONT_PATH, SCALE1(FONT_LARGE));
-	font.medium = TTF_OpenFont(FONT_PATH, SCALE1(FONT_MEDIUM));
-	font.small 	= TTF_OpenFont(FONT_PATH, SCALE1(FONT_SMALL));
-	font.tiny 	= TTF_OpenFont(FONT_PATH, SCALE1(FONT_TINY));
+	font.large 	= TTF_OpenFont(lang.font_path, SCALE1(FONT_LARGE));
+	font.medium = TTF_OpenFont(lang.font_path, SCALE1(FONT_MEDIUM));
+	font.small 	= TTF_OpenFont(lang.font_path, SCALE1(FONT_SMALL));
+	font.tiny 	= TTF_OpenFont(lang.font_path, SCALE1(FONT_TINY));
 	
 	TTF_SetFontStyle(font.large, TTF_STYLE_BOLD);
 	TTF_SetFontStyle(font.medium, TTF_STYLE_BOLD);
@@ -785,14 +788,14 @@ int GFX_blitHardwareGroup(SDL_Surface* dst, int show_setting) {
 }
 void GFX_blitHardwareHints(SDL_Surface* dst, int show_setting) {
 	if (BTN_MOD_VOLUME==BTN_SELECT && BTN_MOD_BRIGHTNESS==BTN_START) {
-		if (show_setting==1) GFX_blitButtonGroup((char*[]){ "SELECT","VOLUME",  NULL }, 0, dst, 0);
-		else GFX_blitButtonGroup((char*[]){ "START","BRIGHTNESS",  NULL }, 0, dst, 0);
+		if (show_setting==1) GFX_blitButtonGroup((char*[]){ "SELECT",(char*)lang.volume,  NULL }, 0, dst, 0);
+		else GFX_blitButtonGroup((char*[]){ "START",(char*)lang.brightness,  NULL }, 0, dst, 0);
 	}
 	else {
-		if (show_setting==1) GFX_blitButtonGroup((char*[]){ BRIGHTNESS_BUTTON_LABEL,"BRIGHTNESS",  NULL }, 0, dst, 0);
-		else GFX_blitButtonGroup((char*[]){ "MENU","BRIGHTNESS",  NULL }, 0, dst, 0);
+		if (show_setting==1) GFX_blitButtonGroup((char*[]){ BRIGHTNESS_BUTTON_LABEL,(char*)lang.brightness,  NULL }, 0, dst, 0);
+		else GFX_blitButtonGroup((char*[]){ "MENU",(char*)lang.brightness,  NULL }, 0, dst, 0);
 	}
-	
+
 }
 
 int GFX_blitButtonGroup(char** pairs, int primary, SDL_Surface* dst, int align_right) {

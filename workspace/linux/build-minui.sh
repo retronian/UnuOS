@@ -15,6 +15,7 @@ gcc \
     ../all/common/api.c \
     ../all/common/scaler.c \
     ../all/common/utils.c \
+    ../all/common/lang.c \
     ./platform/platform.c \
     -o ../all/minui/build/linux/minui \
     -I. \

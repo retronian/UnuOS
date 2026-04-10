@@ -10,6 +10,7 @@
 #include "defines.h"
 #include "api.h"
 #include "utils.h"
+#include "lang.h"
 
 ///////////////////////////////////////
 
@@ -1649,7 +1650,7 @@ int main (int argc, char *argv[]) {
 			
 				// buttons
 				if (show_setting && !GetHDMI()) GFX_blitHardwareHints(screen, show_setting);
-				else if (can_resume) GFX_blitButtonGroup((char*[]){ "X","RESUME",  NULL }, 0, screen, 0);
+				else if (can_resume) GFX_blitButtonGroup((char*[]){ "X",(char*)lang.resume,  NULL }, 0, screen, 0);
 				else GFX_blitButtonGroup((char*[]){ 
 					BTN_SLEEP==BTN_POWER?"POWER":"MENU",
 					BTN_SLEEP==BTN_POWER||simple_mode?"SLEEP":"INFO",  

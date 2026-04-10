@@ -21,7 +21,7 @@ SDL?=SDL
 
 TARGET = say
 INCDIR = -I. -I../common/ -I../../$(PLATFORM)/platform/
-SOURCE = $(TARGET).c ../common/utils.c ../common/api.c ../common/scaler.c ../../$(PLATFORM)/platform/platform.c
+SOURCE = $(TARGET).c ../common/utils.c ../common/api.c ../common/scaler.c ../common/lang.c ../../$(PLATFORM)/platform/platform.c
 
 CC = $(CROSS_COMPILE)gcc
 CFLAGS   = $(ARCH) -fomit-frame-pointer

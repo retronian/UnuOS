@@ -12,9 +12,12 @@ mkdir -p "$FAKESD"/Roms
 mkdir -p "$FAKESD"/Saves
 mkdir -p "$FAKESD"/Bios
 
-# Copy resources from skeleton (font, assets, etc.)
+# Copy resources from skeleton (fonts, assets, etc.)
 SKELETON_RES="../../skeleton/SYSTEM/res"
-cp -v "$SKELETON_RES"/NotoSansCJKjp-Bold.otf "$FAKESD"/.system/res/ 2>/dev/null || mkdir -p "$FAKESD"/.system/res && cp "$SKELETON_RES"/NotoSansCJKjp-Bold.otf "$FAKESD"/.system/res/
+mkdir -p "$FAKESD"/.system/res
+for font in NotoSansCJKjp-Bold.otf NotoSansCJKsc-Bold.otf NotoSansCJKtc-Bold.otf NotoSansCJKkr-Bold.otf; do
+    [ -f "$SKELETON_RES/$font" ] && cp "$SKELETON_RES/$font" "$FAKESD"/.system/res/
+done
 cp "$SKELETON_RES"/assets@2x.png "$FAKESD"/.system/res/ 2>/dev/null || true
 cp "$SKELETON_RES"/charging-640-480.png "$FAKESD"/.system/res/ 2>/dev/null || true
 
