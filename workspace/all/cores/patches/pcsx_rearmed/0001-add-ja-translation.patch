@@ -12,7 +12,7 @@ index e049c6f..4c94603 100644
     NULL,        /* RETRO_LANGUAGE_SPANISH */
     NULL,        /* RETRO_LANGUAGE_GERMAN */
 diff --git a/frontend/libretro_core_options_intl.h b/frontend/libretro_core_options_intl.h
-index 5e74450..ea3bea6 100644
+index 5e74450..b1ff53c 100644
 --- a/frontend/libretro_core_options_intl.h
 +++ b/frontend/libretro_core_options_intl.h
 @@ -1,4 +1,4 @@
@@ -48,7 +48,7 @@ index 5e74450..ea3bea6 100644
   * - 1.0: First commit
  */
  
-@@ -40,6 +36,183 @@ extern "C" {
+@@ -40,6 +36,350 @@ extern "C" {
  
  /* RETRO_LANGUAGE_JAPANESE */
  
@@ -221,6 +221,173 @@ index 5e74450..ea3bea6 100644
 +     "CD ターボ", NULL, NULL, NULL, "compat_hack",
 +     VALS_DISABLED_ENABLED,
 +     "disabled" },
++
++   /* ------- Additional: Screen centering fine-adjust ------- */
++   { "pcsx_rearmed_screen_centering_x",
++     "画面センタリング X", NULL, NULL, NULL, "video",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_screen_centering_y",
++     "画面センタリング Y", NULL, NULL, NULL, "video",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_screen_centering_h_adj",
++     "センタリング水平調整", NULL, NULL, NULL, "video",
++     VALS_AUTO,
++     "0" },
++
++   /* ------- NEON enhancement options ------- */
++   { "pcsx_rearmed_neon_enhancement_no_main",
++     "解像度強化スピードハック", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_neon_enhancement_tex_adj_v2",
++     "テクスチャ調整", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++
++   /* ------- Advanced GPU P.E.Op.S. ------- */
++   { "pcsx_rearmed_show_gpu_peops_settings",
++     "P.E.Op.S. GPU 設定表示", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_odd_even_bit",
++     "奇数偶数ビットハック", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_expand_screen_width",
++     "画面幅拡張", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_ignore_brightness",
++     "輝度無視", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_disable_coord_check",
++     "座標チェック無効", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_lazy_screen_update",
++     "遅延画面更新", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_repeated_triangles",
++     "平面三角形の再描画", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_quads_with_triangles",
++     "四角形を三角形で描画", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_peops_fake_busy_state",
++     "GPU ビジー状態の偽装", NULL, NULL, NULL, "gpu_peops",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++
++   /* ------- Advanced GPU UNAI ------- */
++   { "pcsx_rearmed_show_gpu_unai_settings",
++     "UNAI GPU 設定表示", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_unai_old_renderer",
++     "旧レンダラー", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_unai_blending",
++     "ブレンド", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_gpu_unai_skipline",
++     "ライン省略", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_unai_lighting",
++     "ライティング", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_gpu_unai_fast_lighting",
++     "高速ライティング", NULL, NULL, NULL, "gpu_unai",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++
++   /* ------- Additional input ------- */
++   { "pcsx_rearmed_show_input_settings",
++     "入力設定表示", NULL, NULL, NULL, "input",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_negcon_deadzone",
++     "NegCon デッドゾーン (%)", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_negcon_response",
++     "NegCon ツイスト応答", NULL, NULL, NULL, "input",
++     { { "linear", "リニア" }, { "quadratic", "二次曲線" }, { "cubic", "三次曲線" }, { NULL, NULL } },
++     "linear" },
++   { "pcsx_rearmed_input_sensitivity",
++     "マウス感度", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "1.00" },
++   { "pcsx_rearmed_crosshair1",
++     "照準表示 P1", NULL, NULL, NULL, "input",
++     { { "disabled", "無効" }, { "blue", "青" }, { "green", "緑" }, { "red", "赤" }, { "white", "白" }, { NULL, NULL } },
++     "disabled" },
++   { "pcsx_rearmed_crosshair2",
++     "照準表示 P2", NULL, NULL, NULL, "input",
++     { { "disabled", "無効" }, { "blue", "青" }, { "green", "緑" }, { "red", "赤" }, { "white", "白" }, { NULL, NULL } },
++     "disabled" },
++
++   /* ------- Gun adjustments (value arrays fall back to us) ------- */
++   { "pcsx_rearmed_konamigunadjustx",
++     "コナミガン X 調整", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_konamigunadjusty",
++     "コナミガン Y 調整", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_gunconadjustx",
++     "GunCon X 調整", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_gunconadjusty",
++     "GunCon Y 調整", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "0" },
++   { "pcsx_rearmed_gunconadjustratiox",
++     "GunCon X 比率", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "1.0" },
++   { "pcsx_rearmed_gunconadjustratioy",
++     "GunCon Y 比率", NULL, NULL, NULL, "input",
++     VALS_AUTO,
++     "1.0" },
++
++   /* ------- 3DS / speed hacks ------- */
++   { "pcsx_rearmed_3ds_appcputime",
++     "3DS CPU 時間", NULL, NULL, NULL, "system",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_nocompathacks",
++     "互換性ハック無効", NULL, NULL, NULL, "compat_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_nosmccheck",
++     "(スピードハック) SMC チェック無効", NULL, NULL, NULL, "speed_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gteregsunneeded",
++     "(スピードハック) GTE レジスタ不要", NULL, NULL, NULL, "speed_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_nogteflags",
++     "(スピードハック) GTE フラグ無効", NULL, NULL, NULL, "speed_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_nostalls",
++     "(スピードハック) GTE ストール無効", NULL, NULL, NULL, "speed_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++
 +   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
 +};
 +
@@ -232,7 +399,7 @@ index 5e74450..ea3bea6 100644
  /* RETRO_LANGUAGE_FRENCH */
  
  /* RETRO_LANGUAGE_SPANISH */
-@@ -535,6 +708,14 @@ struct retro_core_options_v2 options_tr = {
+@@ -535,6 +875,14 @@ struct retro_core_options_v2 options_tr = {
     option_defs_tr
  };
  
