@@ -1,0 +1,249 @@
+diff --git a/frontend/libretro_core_options.h b/frontend/libretro_core_options.h
+index e049c6f..4c94603 100644
+--- a/frontend/libretro_core_options.h
++++ b/frontend/libretro_core_options.h
+@@ -1796,7 +1796,7 @@ struct retro_core_options_v2 options_us = {
+ #ifndef HAVE_NO_LANGEXTRA
+ struct retro_core_options_v2 *options_intl[RETRO_LANGUAGE_LAST] = {
+    &options_us, /* RETRO_LANGUAGE_ENGLISH */
+-   NULL,        /* RETRO_LANGUAGE_JAPANESE */
++   &options_ja, /* RETRO_LANGUAGE_JAPANESE */
+    NULL,        /* RETRO_LANGUAGE_FRENCH */
+    NULL,        /* RETRO_LANGUAGE_SPANISH */
+    NULL,        /* RETRO_LANGUAGE_GERMAN */
+diff --git a/frontend/libretro_core_options_intl.h b/frontend/libretro_core_options_intl.h
+index 5e74450..ea3bea6 100644
+--- a/frontend/libretro_core_options_intl.h
++++ b/frontend/libretro_core_options_intl.h
+@@ -1,4 +1,4 @@
+-﻿#ifndef LIBRETRO_CORE_OPTIONS_INTL_H__
++#ifndef LIBRETRO_CORE_OPTIONS_INTL_H__
+ #define LIBRETRO_CORE_OPTIONS_INTL_H__
+ 
+ #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+@@ -11,20 +11,16 @@
+ 
+ /*
+  ********************************
+- * VERSION: 2.0
++ * VERSION: 2.1
+  ********************************
+  *
++ * - 2.1: Partial Japanese translation for user-facing options
++ *        (relies on OneOS merge-aware SET_CORE_OPTIONS_INTL handler
++ *         to fall back to English for missing keys/values)
+  * - 2.0: Add support for core options v2 interface
+  * - 1.3: Move translations to libretro_core_options_intl.h
+- *        - libretro_core_options_intl.h includes BOM and utf-8
+- *          fix for MSVC 2010-2013
+- *        - Added HAVE_NO_LANGEXTRA flag to disable translations
+- *          on platforms/compilers without BOM support
+- * - 1.2: Use core options v1 interface when
+- *        RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION is >= 1
+- *        (previously required RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION == 1)
+- * - 1.1: Support generation of core options v0 retro_core_option_value
+- *        arrays containing options with a single value
++ * - 1.2: Use core options v1 interface
++ * - 1.1: v0 single-value arrays
+  * - 1.0: First commit
+ */
+ 
+@@ -40,6 +36,183 @@ extern "C" {
+ 
+ /* RETRO_LANGUAGE_JAPANESE */
+ 
++struct retro_core_option_v2_category option_cats_ja[] = {
++   { "system",      "システム",            "リージョン / BIOS / メモリーカード等の基本ハードウェア設定。" },
++   { "video",       "ビデオ",              "基本的な表示設定。" },
++#ifdef GPU_NEON
++   { "gpu_neon",    "GPU プラグイン",      "NEON GPU プラグインの低レベル設定。" },
++#endif
++#ifdef GPU_PEOPS
++   { "gpu_peops",   "GPU プラグイン (高度)", "P.E.Op.S. GPU プラグインの低レベル設定。" },
++#endif
++#ifdef GPU_UNAI
++   { "gpu_unai",    "GPU プラグイン (高度)", "UNAI GPU プラグインの低レベル設定。" },
++#endif
++   { "audio",       "オーディオ",          "リバーブ / 補間 / CD オーディオデコードなどサウンド設定。" },
++   { "input",       "入力",                "アナログ応答 / 振動 / マルチタップ / ライトガン等の入力デバイス設定。" },
++   { "compat_hack", "互換性修正",          "特定ゲームの正常動作に必要な設定・回避策。" },
++   { "speed_hack",  "スピードハック (高度)", "精度・安定性を犠牲にしてパフォーマンスを向上させるハック。" },
++   { NULL, NULL, NULL },
++};
++
++/* Shared value arrays for common enums.
++ * OneOS merge logic only reads the labels; values must match us keys. */
++#define VALS_DISABLED_ENABLED \
++   { { "disabled", "無効" }, { "enabled", "有効" }, { NULL, NULL } }
++#define VALS_AUTO_DISABLED_ENABLED \
++   { { "auto", "自動" }, { "disabled", "無効" }, { "enabled", "有効" }, { NULL, NULL } }
++#define VALS_AUTO \
++   { { "auto", "自動" }, { NULL, NULL } }
++
++struct retro_core_option_v2_definition option_defs_ja[] = {
++   { "pcsx_rearmed_region",
++     "本体リージョン", NULL, NULL, NULL, "system",
++     { { "auto", "自動" }, { "NTSC", NULL }, { "PAL", NULL }, { NULL, NULL } },
++     "auto" },
++   { "pcsx_rearmed_bios",
++     "BIOS 選択", NULL, NULL, NULL, "system",
++     { { "auto", "自動" }, { "HLE", NULL }, { NULL, NULL } },
++     "auto" },
++   { "pcsx_rearmed_show_bios_bootlogo",
++     "BIOS 名 / 起動ロゴ表示", NULL, NULL, NULL, "system",
++     { { "disabled", "無効" }, { "enabled", "有効" }, { "enabled_no_pcsx", "有効 (PCSXtm なし)" }, { NULL, NULL } },
++     "disabled" },
++   { "pcsx_rearmed_memcard2",
++     "メモリーカード 2 (共有)", NULL, NULL, NULL, "system",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_cd_readahead",
++     "CD 先読み", NULL, NULL, NULL, "system",
++     VALS_AUTO,
++     "12" },
++   { "pcsx_rearmed_drc",
++     "動的再コンパイラ", NULL, NULL, NULL, "system",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_drc_thread",
++     "DRC スレッド化", NULL, NULL, NULL, "system",
++     VALS_AUTO_DISABLED_ENABLED,
++     "auto" },
++   { "pcsx_rearmed_psxclock",
++     "PSX CPU クロック (%)", NULL, NULL, NULL, "system",
++     VALS_AUTO,
++     "auto" },
++   { "pcsx_rearmed_dithering",
++     "ディザリングパターン", NULL, NULL, NULL, "video",
++     { { "disabled", "無効" }, { "enabled", "有効" }, { "force", "強制" }, { NULL, NULL } },
++     "enabled" },
++   { "pcsx_rearmed_gpu_thread_rendering",
++     "スレッド描画", NULL, NULL, NULL, "video",
++     VALS_AUTO_DISABLED_ENABLED,
++     "auto" },
++   { "pcsx_rearmed_frameskip_type",
++     "フレームスキップ", NULL, NULL, NULL, "video",
++     { { "disabled", "無効" }, { "auto", "自動" }, { "auto_threshold", "自動 (しきい値)" }, { "fixed_interval", "固定間隔" }, { NULL, NULL } },
++     "disabled" },
++   { "pcsx_rearmed_frameskip_threshold",
++     "フレームスキップしきい値 (%)", NULL, NULL, NULL, "video",
++     VALS_AUTO,
++     "33" },
++   { "pcsx_rearmed_frameskip_interval",
++     "フレームスキップ間隔", NULL, NULL, NULL, "video",
++     VALS_AUTO,
++     "1" },
++   { "pcsx_rearmed_display_fps_v2",
++     "FPS 表示", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_fractional_framerate",
++     "端数フレームレート", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_alt_flip",
++     "代替フリップモード", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_rgb32_output",
++     "RGB32 出力", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_scale_hires",
++     "高解像度スケーリング", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_gpu_slow_llists",
++     "低速リンクリスト", NULL, NULL, NULL, "video",
++     VALS_AUTO_DISABLED_ENABLED,
++     "auto" },
++   { "pcsx_rearmed_show_overscan",
++     "オーバースキャン表示", NULL, NULL, NULL, "video",
++     { { "disabled", "無効" }, { "enabled", "有効" }, { "hack", "ハック" }, { NULL, NULL } },
++     "disabled" },
++   { "pcsx_rearmed_screen_centering",
++     "画面センタリング", NULL, NULL, NULL, "video",
++     { { "auto", "自動" }, { "game", "ゲーム" }, { "borders", "枠あり" }, { "manual", "手動" }, { NULL, NULL } },
++     "auto" },
++   { "pcsx_rearmed_neon_interlace_enable_v2",
++     "NEON インターレース", NULL, NULL, NULL, "video",
++     VALS_AUTO_DISABLED_ENABLED,
++     "auto" },
++   { "pcsx_rearmed_neon_enhancement_enable",
++     "NEON 解像度強化", NULL, NULL, NULL, "video",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_spu_reverb",
++     "SPU リバーブ", NULL, NULL, NULL, "audio",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_spu_interpolation",
++     "SPU 補間", NULL, NULL, NULL, "audio",
++     { { "simple", "シンプル" }, { "gaussian", "ガウス" }, { "cubic", "キュービック" }, { "off", "無効" }, { NULL, NULL } },
++     "simple" },
++   { "pcsx_rearmed_nocdaudio",
++     "CD オーディオ", NULL, NULL, NULL, "audio",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_noxadecoding",
++     "XA デコード", NULL, NULL, NULL, "audio",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_spu_thread",
++     "SPU スレッド化", NULL, NULL, NULL, "audio",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_analog_axis_modifier",
++     "アナログ軸範囲", NULL, NULL, NULL, "input",
++     { { "square", "正方形" }, { "circle", "円形" }, { NULL, NULL } },
++     "square" },
++   { "pcsx_rearmed_vibration",
++     "振動効果", NULL, NULL, NULL, "input",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_analog_combo",
++     "アナログ/十字キー切替コンボ", NULL, NULL, NULL, "input",
++     { { "l1+r1+select", "L1+R1+Select" }, { "l3+r3", "L3+R3" }, { "disabled", "無効" }, { NULL, NULL } },
++     "l1+r1+select" },
++   { "pcsx_rearmed_multitap",
++     "マルチタップ", NULL, NULL, NULL, "input",
++     { { "auto", "自動" }, { "disabled", "無効" }, { "port 1", "ポート 1" }, { "port 2", "ポート 2" }, { "ports 1 and 2", "ポート 1 & 2" }, { NULL, NULL } },
++     "auto" },
++   { "pcsx_rearmed_icache_emulation",
++     "命令キャッシュエミュレーション", NULL, NULL, NULL, "compat_hack",
++     VALS_DISABLED_ENABLED,
++     "enabled" },
++   { "pcsx_rearmed_exception_emulation",
++     "例外エミュレーション", NULL, NULL, NULL, "compat_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { "pcsx_rearmed_cd_turbo",
++     "CD ターボ", NULL, NULL, NULL, "compat_hack",
++     VALS_DISABLED_ENABLED,
++     "disabled" },
++   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
++};
++
++struct retro_core_options_v2 options_ja = {
++   option_cats_ja,
++   option_defs_ja
++};
++
+ /* RETRO_LANGUAGE_FRENCH */
+ 
+ /* RETRO_LANGUAGE_SPANISH */
+@@ -535,6 +708,14 @@ struct retro_core_options_v2 options_tr = {
+    option_defs_tr
+ };
+ 
++/* RETRO_LANGUAGE_SLOVAK */
++
++/* RETRO_LANGUAGE_PERSIAN */
++
++/* RETRO_LANGUAGE_HEBREW */
++
++/* RETRO_LANGUAGE_ASTURIAN */
++
+ #ifdef __cplusplus
+ }
+ #endif
