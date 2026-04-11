@@ -1,0 +1,495 @@
+diff --git a/libretro/libretro_core_options.h b/libretro/libretro_core_options.h
+index ab406b1..02f5dd5 100644
+--- a/libretro/libretro_core_options.h
++++ b/libretro/libretro_core_options.h
+@@ -357,7 +357,7 @@ struct retro_core_option_definition option_defs_us[] = {
+ #ifndef HAVE_NO_LANGEXTRA
+ struct retro_core_option_definition *option_defs_intl[RETRO_LANGUAGE_LAST] = {
+    option_defs_us, /* RETRO_LANGUAGE_ENGLISH */
+-   NULL,           /* RETRO_LANGUAGE_JAPANESE */
++   option_defs_ja, /* RETRO_LANGUAGE_JAPANESE */
+    NULL,           /* RETRO_LANGUAGE_FRENCH */
+    NULL,           /* RETRO_LANGUAGE_SPANISH */
+    NULL,           /* RETRO_LANGUAGE_GERMAN */
+@@ -366,9 +366,9 @@ struct retro_core_option_definition *option_defs_intl[RETRO_LANGUAGE_LAST] = {
+    NULL,           /* RETRO_LANGUAGE_PORTUGUESE_BRAZIL */
+    NULL,           /* RETRO_LANGUAGE_PORTUGUESE_PORTUGAL */
+    NULL,           /* RETRO_LANGUAGE_RUSSIAN */
+-   NULL,           /* RETRO_LANGUAGE_KOREAN */
+-   NULL,           /* RETRO_LANGUAGE_CHINESE_TRADITIONAL */
+-   NULL,           /* RETRO_LANGUAGE_CHINESE_SIMPLIFIED */
++   option_defs_ko, /* RETRO_LANGUAGE_KOREAN */
++   option_defs_cht,/* RETRO_LANGUAGE_CHINESE_TRADITIONAL */
++   option_defs_chs,/* RETRO_LANGUAGE_CHINESE_SIMPLIFIED */
+    NULL,           /* RETRO_LANGUAGE_ESPERANTO */
+    NULL,           /* RETRO_LANGUAGE_POLISH */
+    NULL,           /* RETRO_LANGUAGE_VIETNAMESE */
+diff --git a/libretro/libretro_core_options_intl.h b/libretro/libretro_core_options_intl.h
+index abf5d9a..3da7451 100644
+--- a/libretro/libretro_core_options_intl.h
++++ b/libretro/libretro_core_options_intl.h
+@@ -1,4 +1,4 @@
+-﻿#ifndef LIBRETRO_CORE_OPTIONS_INTL_H__
++#ifndef LIBRETRO_CORE_OPTIONS_INTL_H__
+ #define LIBRETRO_CORE_OPTIONS_INTL_H__
+ 
+ #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+@@ -11,19 +11,13 @@
+ 
+ /*
+  ********************************
+- * VERSION: 1.3
++ * VERSION: 1.4
+  ********************************
+  *
++ * - 1.4: Add JA/ZH-CN/ZH-TW/KO translations
+  * - 1.3: Move translations to libretro_core_options_intl.h
+- *        - libretro_core_options_intl.h includes BOM and utf-8
+- *          fix for MSVC 2010-2013
+- *        - Added HAVE_NO_LANGEXTRA flag to disable translations
+- *          on platforms/compilers without BOM support
+- * - 1.2: Use core options v1 interface when
+- *        RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION is >= 1
+- *        (previously required RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION == 1)
+- * - 1.1: Support generation of core options v0 retro_core_option_value
+- *        arrays containing options with a single value
++ * - 1.2: Use core options v1 interface
++ * - 1.1: v0 arrays with single value
+  * - 1.0: First commit
+ */
+ 
+@@ -39,6 +33,195 @@ extern "C" {
+ 
+ /* RETRO_LANGUAGE_JAPANESE */
+ 
++struct retro_core_option_definition option_defs_ja[] = {
++   {
++      "gpsp_bios",
++      "BIOS",
++      "使用するBIOSイメージを選択します。公式BIOSはユーザーが用意する必要があります。非公式 (または内蔵) BIOSを使うと一部ゲームで互換性問題が発生することがあります。最良の結果には任天堂純正のBIOSを使用してください。",
++      {
++         { "auto",      "自動選択" },
++         { "builtin",   "内蔵BIOS" },
++         { "official",  "純正BIOS" },
++         { NULL, NULL },
++      },
++      "auto"
++   },
++   {
++      "gpsp_boot_mode",
++      "起動モード",
++      "ゲーム起動前にBIOSを起動するか選びます。動作にほとんど違いはありません。",
++      {
++         { "game",      "ゲームから起動" },
++         { "bios",      "BIOSから起動" },
++         { NULL, NULL },
++      },
++      "game"
++   },
++#if defined(HAVE_DYNAREC)
++   {
++      "gpsp_drc",
++      "動的再コンパイラ",
++      "CPU命令をネイティブ命令に動的に再コンパイルします。性能が大きく向上しますが精度は低下する場合があります。",
++      {
++         { "enabled",  NULL },
++         { "disabled", NULL },
++         { NULL, NULL },
++      },
++      "enabled"
++   },
++#endif
++   {
++      "gpsp_sprlim",
++      "スプライト制限解除",
++      "実機の1スキャンラインあたりスプライト数制限を解除します。一部ゲームはハード制限に依存して正しく描画されるため注意 (スプライトを意図的に隠す用途など)。",
++      {
++         { "disabled", NULL },
++         { "enabled",  NULL },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "gpsp_rtc",
++      "RTC対応",
++      "エミュレート対象カートリッジのRTC (リアルタイムクロック) サポートを設定します。自動検出はROMデータベースを使用し、ほとんどの商用タイトルで動作します。自作ROMやROMハックでは強制有効にする必要があるかもしれません。",
++      {
++         { "auto", NULL },
++         { "enabled",  NULL },
++         { "disabled", NULL },
++         { NULL, NULL },
++      },
++      "auto"
++   },
++   {
++      "gpsp_serial",
++      "通信ケーブル接続",
++      "シリアル (通信ケーブル) 接続を設定します。自動はほとんどの既知ゲームで適切な動作を選びます。",
++      {
++         { "auto",     "自動" },
++         { "disabled", "無効" },
++         { "rfu",      "GBAワイヤレスアダプタ" },
++         { "mul_poke", "通信ケーブル - ポケモン第3世代モード" },
++         { "mul_aw1",  "通信ケーブル - アドバンスウォーズ1モード" },
++         { "mul_aw2",  "通信ケーブル - アドバンスウォーズ2モード" },
++         { NULL, NULL },
++      },
++      "auto"
++   },
++   {
++      "gpsp_rumble",
++      "振動対応",
++      "エミュレート対象カートリッジの振動 (ランブル) サポートを設定します。自動検出はROMデータベースを使用し、ほとんどの商用タイトルで動作します。対応ROMハックでは強制有効にしたり、不要な場合は強制無効にできます。",
++      {
++         { "auto", NULL },
++         { "enabled",  NULL },
++         { "disabled", NULL },
++         { NULL, NULL },
++      },
++      "auto"
++   },
++   {
++      "gpsp_frameskip",
++      "フレームスキップ",
++      "オーディオバッファのアンダーラン (音割れ) を避けるためフレームをスキップします。描画のなめらかさを犠牲に性能を向上させます。「自動」はフロントエンド指示に従います。「自動 (しきい値)」は「フレームスキップしきい値 (%)」を使用します。「固定間隔」は「フレームスキップ間隔」を使用します。",
++      {
++         { "disabled",       "無効" },
++         { "auto",           "自動" },
++         { "auto_threshold", "自動 (しきい値)" },
++         { "fixed_interval", "固定間隔" },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "gpsp_frameskip_threshold",
++      "フレームスキップしきい値 (%)",
++      "「フレームスキップ」が「自動 (しきい値)」の時、オーディオバッファ使用率がこの値を下回るとフレームをスキップします。値が高いほど音割れを抑える代わりにフレームスキップが頻発します。",
++      {
++         { "15", NULL }, { "18", NULL }, { "21", NULL }, { "24", NULL },
++         { "27", NULL }, { "30", NULL }, { "33", NULL }, { "36", NULL },
++         { "39", NULL }, { "42", NULL }, { "45", NULL }, { "48", NULL },
++         { "51", NULL }, { "54", NULL }, { "57", NULL }, { "60", NULL },
++         { NULL, NULL },
++      },
++      "33"
++   },
++   {
++      "gpsp_frameskip_interval",
++      "フレームスキップ間隔",
++      "「フレームスキップ」が「固定間隔」の時、1フレーム描画後に省略するフレーム数 (例: 「0」=60fps、「1」=30fps、「2」=15fps)。",
++      {
++         { "0",  NULL }, { "1",  NULL }, { "2",  NULL }, { "3",  NULL },
++         { "4",  NULL }, { "5",  NULL }, { "6",  NULL }, { "7",  NULL },
++         { "8",  NULL }, { "9",  NULL }, { "10", NULL },
++         { NULL, NULL },
++      },
++      "1"
++   },
++   {
++      "gpsp_color_correction",
++      "色補正",
++      "GBA実機の液晶表示に合わせて出力色を調整します。",
++      {
++         { "enabled",  NULL },
++         { "disabled", NULL },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "gpsp_frame_mixing",
++      "フレーム間ブレンド",
++      "現在と直前のフレームを50:50で合成することでLCDゴースト効果をシミュレートします。LCDゴーストを透明効果として使うゲーム (F-ZERO、ボクらの太陽シリーズ等) で正しい描画に必要です。",
++      {
++         { "enabled",  NULL },
++         { "disabled", NULL },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "gpsp_turbo_period",
++      "連射ボタン周期",
++      "連射A/Bボタンを押し続けている間の繰り返し間隔 (フレーム数) を指定します。",
++      {
++         { "4",   NULL }, { "5",   NULL }, { "6",   NULL }, { "7",   NULL },
++         { "8",   NULL }, { "9",   NULL }, { "10",  NULL }, { "11",  NULL },
++         { "12",  NULL }, { "13",  NULL }, { "14",  NULL }, { "15",  NULL },
++         { "16",  NULL }, { "17",  NULL }, { "18",  NULL }, { "19",  NULL },
++         { "20",  NULL }, { "21",  NULL }, { "22",  NULL }, { "23",  NULL },
++         { "24",  NULL }, { "25",  NULL }, { "26",  NULL }, { "27",  NULL },
++         { "28",  NULL }, { "29",  NULL }, { "30",  NULL }, { "31",  NULL },
++         { "32",  NULL }, { "33",  NULL }, { "34",  NULL }, { "35",  NULL },
++         { "36",  NULL }, { "37",  NULL }, { "38",  NULL }, { "39",  NULL },
++         { "40",  NULL }, { "41",  NULL }, { "42",  NULL }, { "43",  NULL },
++         { "44",  NULL }, { "45",  NULL }, { "46",  NULL }, { "47",  NULL },
++         { "48",  NULL }, { "49",  NULL }, { "50",  NULL }, { "51",  NULL },
++         { "52",  NULL }, { "53",  NULL }, { "54",  NULL }, { "55",  NULL },
++         { "56",  NULL }, { "57",  NULL }, { "58",  NULL }, { "59",  NULL },
++         { "60",  NULL }, { "61",  NULL }, { "62",  NULL }, { "63",  NULL },
++         { "64",  NULL }, { "65",  NULL }, { "66",  NULL }, { "67",  NULL },
++         { "68",  NULL }, { "69",  NULL }, { "70",  NULL }, { "71",  NULL },
++         { "72",  NULL }, { "73",  NULL }, { "74",  NULL }, { "75",  NULL },
++         { "76",  NULL }, { "77",  NULL }, { "78",  NULL }, { "79",  NULL },
++         { "80",  NULL }, { "81",  NULL }, { "82",  NULL }, { "83",  NULL },
++         { "84",  NULL }, { "85",  NULL }, { "86",  NULL }, { "87",  NULL },
++         { "88",  NULL }, { "89",  NULL }, { "90",  NULL }, { "91",  NULL },
++         { "92",  NULL }, { "93",  NULL }, { "94",  NULL }, { "95",  NULL },
++         { "96",  NULL }, { "97",  NULL }, { "98",  NULL }, { "99",  NULL },
++         { "100", NULL }, { "101", NULL }, { "102", NULL }, { "103", NULL },
++         { "104", NULL }, { "105", NULL }, { "106", NULL }, { "107", NULL },
++         { "108", NULL }, { "109", NULL }, { "110", NULL }, { "111", NULL },
++         { "112", NULL }, { "113", NULL }, { "114", NULL }, { "115", NULL },
++         { "116", NULL }, { "117", NULL }, { "118", NULL }, { "119", NULL },
++         { "120", NULL },
++         { NULL, NULL },
++      },
++      "4"
++   },
++   { NULL, NULL, NULL, {{0}}, NULL },
++};
++
+ /* RETRO_LANGUAGE_FRENCH */
+ 
+ /* RETRO_LANGUAGE_SPANISH */
+@@ -57,10 +240,238 @@ extern "C" {
+ 
+ /* RETRO_LANGUAGE_KOREAN */
+ 
++struct retro_core_option_definition option_defs_ko[] = {
++   { "gpsp_bios", "BIOS",
++     "사용할 BIOS 이미지를 선택합니다. 공식 BIOS는 사용자가 제공해야 합니다. 비공식 (또는 내장) BIOS를 사용하면 일부 게임에서 호환성 문제가 발생할 수 있습니다. 최상의 결과를 위해 공식 닌텐도 BIOS 사용을 권장합니다.",
++     { { "auto", "자동 선택" }, { "builtin", "내장 BIOS" }, { "official", "공식 BIOS" }, { NULL, NULL } }, "auto" },
++   { "gpsp_boot_mode", "부팅 모드",
++     "게임 실행 전에 BIOS를 부팅할지 선택합니다. 동작에는 큰 차이가 없습니다.",
++     { { "game", "게임으로 부팅" }, { "bios", "BIOS로 부팅" }, { NULL, NULL } }, "game" },
++#if defined(HAVE_DYNAREC)
++   { "gpsp_drc", "동적 재컴파일러",
++     "CPU 명령을 네이티브 명령으로 동적 재컴파일합니다. 성능이 크게 향상되지만 정확도가 낮아질 수 있습니다.",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "enabled" },
++#endif
++   { "gpsp_sprlim", "스프라이트 제한 해제",
++     "원래 스캔라인당 스프라이트 하드웨어 제한을 제거합니다. 일부 게임은 이 제한에 의존하여 올바르게 렌더링될 수 있습니다 (일부 스프라이트를 숨기는 등).",
++     { { "disabled", NULL }, { "enabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_rtc", "RTC 지원",
++     "에뮬레이트되는 카트리지의 RTC 지원을 설정합니다. 자동 감지는 대부분의 상용 타이틀에서 동작하는 ROM 데이터베이스를 사용합니다. 홈브루나 ROM 해킹에서는 강제 설정이 필요할 수 있습니다.",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_serial", "링크 케이블 연결",
++     "시리얼 (링크 케이블) 연결을 설정합니다. 자동은 대부분의 게임에 적합한 설정을 선택합니다.",
++     { { "auto", "자동" }, { "disabled", "사용 안 함" }, { "rfu", "GBA 무선 어댑터" },
++       { "mul_poke", "링크 케이블 - 포켓몬 3세대 모드" }, { "mul_aw1", "링크 케이블 - 어드밴스 워즈 1 모드" },
++       { "mul_aw2", "링크 케이블 - 어드밴스 워즈 2 모드" }, { NULL, NULL } }, "auto" },
++   { "gpsp_rumble", "진동 지원",
++     "에뮬레이트되는 카트리지의 진동 지원을 설정합니다. 자동 감지는 ROM 데이터베이스를 사용합니다.",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_frameskip", "프레임 스킵",
++     "오디오 버퍼 언더런 (끊김) 을 피하기 위해 프레임을 건너뜁니다. '자동'은 프론트엔드 지시에 따릅니다. '자동 (임계값)'은 '프레임 스킵 임계값 (%)'을 사용합니다. '고정 간격'은 '프레임 스킵 간격'을 사용합니다.",
++     { { "disabled", "사용 안 함" }, { "auto", "자동" }, { "auto_threshold", "자동 (임계값)" },
++       { "fixed_interval", "고정 간격" }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frameskip_threshold", "프레임 스킵 임계값 (%)",
++     "'프레임 스킵'이 '자동 (임계값)'일 때, 오디오 버퍼 점유율이 이 값 미만이면 프레임을 건너뜁니다.",
++     { { "15", NULL }, { "18", NULL }, { "21", NULL }, { "24", NULL }, { "27", NULL },
++       { "30", NULL }, { "33", NULL }, { "36", NULL }, { "39", NULL }, { "42", NULL },
++       { "45", NULL }, { "48", NULL }, { "51", NULL }, { "54", NULL }, { "57", NULL },
++       { "60", NULL }, { NULL, NULL } }, "33" },
++   { "gpsp_frameskip_interval", "프레임 스킵 간격",
++     "'프레임 스킵'이 '고정 간격'일 때, 1프레임 렌더링 후 생략할 프레임 수 ('0'=60fps, '1'=30fps, '2'=15fps).",
++     { { "0", NULL }, { "1", NULL }, { "2", NULL }, { "3", NULL }, { "4", NULL },
++       { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL }, { "9", NULL },
++       { "10", NULL }, { NULL, NULL } }, "1" },
++   { "gpsp_color_correction", "색상 보정",
++     "GBA 실기 디스플레이와 일치하도록 출력 색상을 조정합니다.",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frame_mixing", "프레임 혼합",
++     "현재 프레임과 이전 프레임을 50:50으로 혼합하여 LCD 고스팅 효과를 시뮬레이션합니다. LCD 고스팅을 투명 효과로 사용하는 게임 (F-Zero, 보쿠라 시리즈 등) 에 필요합니다.",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_turbo_period", "연사 버튼 주기",
++     "연사 A/B 버튼을 누르고 있을 때의 반복 간격 (프레임 수).",
++     { { "4", NULL }, { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL },
++       { "9", NULL }, { "10", NULL }, { "11", NULL }, { "12", NULL }, { "13", NULL },
++       { "14", NULL }, { "15", NULL }, { "16", NULL }, { "17", NULL }, { "18", NULL },
++       { "19", NULL }, { "20", NULL }, { "21", NULL }, { "22", NULL }, { "23", NULL },
++       { "24", NULL }, { "25", NULL }, { "26", NULL }, { "27", NULL }, { "28", NULL },
++       { "29", NULL }, { "30", NULL }, { "31", NULL }, { "32", NULL }, { "33", NULL },
++       { "34", NULL }, { "35", NULL }, { "36", NULL }, { "37", NULL }, { "38", NULL },
++       { "39", NULL }, { "40", NULL }, { "41", NULL }, { "42", NULL }, { "43", NULL },
++       { "44", NULL }, { "45", NULL }, { "46", NULL }, { "47", NULL }, { "48", NULL },
++       { "49", NULL }, { "50", NULL }, { "51", NULL }, { "52", NULL }, { "53", NULL },
++       { "54", NULL }, { "55", NULL }, { "56", NULL }, { "57", NULL }, { "58", NULL },
++       { "59", NULL }, { "60", NULL }, { "61", NULL }, { "62", NULL }, { "63", NULL },
++       { "64", NULL }, { "65", NULL }, { "66", NULL }, { "67", NULL }, { "68", NULL },
++       { "69", NULL }, { "70", NULL }, { "71", NULL }, { "72", NULL }, { "73", NULL },
++       { "74", NULL }, { "75", NULL }, { "76", NULL }, { "77", NULL }, { "78", NULL },
++       { "79", NULL }, { "80", NULL }, { "81", NULL }, { "82", NULL }, { "83", NULL },
++       { "84", NULL }, { "85", NULL }, { "86", NULL }, { "87", NULL }, { "88", NULL },
++       { "89", NULL }, { "90", NULL }, { "91", NULL }, { "92", NULL }, { "93", NULL },
++       { "94", NULL }, { "95", NULL }, { "96", NULL }, { "97", NULL }, { "98", NULL },
++       { "99", NULL }, { "100", NULL }, { "101", NULL }, { "102", NULL }, { "103", NULL },
++       { "104", NULL }, { "105", NULL }, { "106", NULL }, { "107", NULL }, { "108", NULL },
++       { "109", NULL }, { "110", NULL }, { "111", NULL }, { "112", NULL }, { "113", NULL },
++       { "114", NULL }, { "115", NULL }, { "116", NULL }, { "117", NULL }, { "118", NULL },
++       { "119", NULL }, { "120", NULL }, { NULL, NULL } }, "4" },
++   { NULL, NULL, NULL, {{0}}, NULL },
++};
++
+ /* RETRO_LANGUAGE_CHINESE_TRADITIONAL */
+ 
++struct retro_core_option_definition option_defs_cht[] = {
++   { "gpsp_bios", "BIOS",
++     "選擇要使用的 BIOS 映像。官方 BIOS 需由使用者提供。使用非官方 (或內建) BIOS 可能會導致部分遊戲出現相容性問題。建議使用任天堂官方 BIOS 以獲得最佳效果。",
++     { { "auto", "自動選擇" }, { "builtin", "內建 BIOS" }, { "official", "原廠 BIOS" }, { NULL, NULL } }, "auto" },
++   { "gpsp_boot_mode", "啟動模式",
++     "選擇啟動遊戲前是否先啟動 BIOS。兩種模式差別不大。",
++     { { "game", "從遊戲啟動" }, { "bios", "從 BIOS 啟動" }, { NULL, NULL } }, "game" },
++#if defined(HAVE_DYNAREC)
++   { "gpsp_drc", "動態重編譯器",
++     "將 CPU 指令動態重新編譯為原生指令。大幅提升效能但可能降低精度。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "enabled" },
++#endif
++   { "gpsp_sprlim", "解除精靈限制",
++     "解除實機每掃描線精靈數量的硬體限制。部分遊戲依賴此限制來正確繪製 (如隱藏特定精靈)。",
++     { { "disabled", NULL }, { "enabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_rtc", "RTC 支援",
++     "設定卡匣的 RTC (即時時鐘) 支援。自動偵測使用 ROM 資料庫，適用於多數商業遊戲。自製 ROM 或 ROM Hack 可能需強制啟用。",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_serial", "連線纜接續",
++     "設定序列 (連線纜) 連接。自動會為多數已知遊戲選擇適當的設定。",
++     { { "auto", "自動" }, { "disabled", "停用" }, { "rfu", "GBA 無線接收器" },
++       { "mul_poke", "連線纜 - 寶可夢第3世代模式" }, { "mul_aw1", "連線纜 - 任天堂大戰 1 模式" },
++       { "mul_aw2", "連線纜 - 任天堂大戰 2 模式" }, { NULL, NULL } }, "auto" },
++   { "gpsp_rumble", "震動支援",
++     "設定卡匣的震動支援。自動偵測使用 ROM 資料庫。",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_frameskip", "跳幀",
++     "跳過幀以避免音訊緩衝區下溢 (爆音)。「自動」依前端指示。「自動 (閾值)」使用「跳幀閾值 (%)」。「固定間隔」使用「跳幀間隔」。",
++     { { "disabled", "停用" }, { "auto", "自動" }, { "auto_threshold", "自動 (閾值)" },
++       { "fixed_interval", "固定間隔" }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frameskip_threshold", "跳幀閾值 (%)",
++     "「跳幀」設為「自動 (閾值)」時，指定音訊緩衝區佔用率低於此值時跳幀。",
++     { { "15", NULL }, { "18", NULL }, { "21", NULL }, { "24", NULL }, { "27", NULL },
++       { "30", NULL }, { "33", NULL }, { "36", NULL }, { "39", NULL }, { "42", NULL },
++       { "45", NULL }, { "48", NULL }, { "51", NULL }, { "54", NULL }, { "57", NULL },
++       { "60", NULL }, { NULL, NULL } }, "33" },
++   { "gpsp_frameskip_interval", "跳幀間隔",
++     "「跳幀」設為「固定間隔」時，渲染 1 幀後省略的幀數 ('0'=60fps, '1'=30fps, '2'=15fps)。",
++     { { "0", NULL }, { "1", NULL }, { "2", NULL }, { "3", NULL }, { "4", NULL },
++       { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL }, { "9", NULL },
++       { "10", NULL }, { NULL, NULL } }, "1" },
++   { "gpsp_color_correction", "色彩校正",
++     "調整輸出色彩以符合 GBA 實機顯示。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frame_mixing", "幀間混合",
++     "將目前與前一幀以 50:50 混合以模擬 LCD 殘影效果。對於利用 LCD 殘影產生透明效果的遊戲 (F-Zero, 我們的太陽系列等) 是必要的。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_turbo_period", "連發按鍵週期",
++     "按住連發 A/B 按鈕時的重複間隔 (幀數)。",
++     { { "4", NULL }, { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL },
++       { "9", NULL }, { "10", NULL }, { "11", NULL }, { "12", NULL }, { "13", NULL },
++       { "14", NULL }, { "15", NULL }, { "16", NULL }, { "17", NULL }, { "18", NULL },
++       { "19", NULL }, { "20", NULL }, { "21", NULL }, { "22", NULL }, { "23", NULL },
++       { "24", NULL }, { "25", NULL }, { "26", NULL }, { "27", NULL }, { "28", NULL },
++       { "29", NULL }, { "30", NULL }, { "31", NULL }, { "32", NULL }, { "33", NULL },
++       { "34", NULL }, { "35", NULL }, { "36", NULL }, { "37", NULL }, { "38", NULL },
++       { "39", NULL }, { "40", NULL }, { "41", NULL }, { "42", NULL }, { "43", NULL },
++       { "44", NULL }, { "45", NULL }, { "46", NULL }, { "47", NULL }, { "48", NULL },
++       { "49", NULL }, { "50", NULL }, { "51", NULL }, { "52", NULL }, { "53", NULL },
++       { "54", NULL }, { "55", NULL }, { "56", NULL }, { "57", NULL }, { "58", NULL },
++       { "59", NULL }, { "60", NULL }, { "61", NULL }, { "62", NULL }, { "63", NULL },
++       { "64", NULL }, { "65", NULL }, { "66", NULL }, { "67", NULL }, { "68", NULL },
++       { "69", NULL }, { "70", NULL }, { "71", NULL }, { "72", NULL }, { "73", NULL },
++       { "74", NULL }, { "75", NULL }, { "76", NULL }, { "77", NULL }, { "78", NULL },
++       { "79", NULL }, { "80", NULL }, { "81", NULL }, { "82", NULL }, { "83", NULL },
++       { "84", NULL }, { "85", NULL }, { "86", NULL }, { "87", NULL }, { "88", NULL },
++       { "89", NULL }, { "90", NULL }, { "91", NULL }, { "92", NULL }, { "93", NULL },
++       { "94", NULL }, { "95", NULL }, { "96", NULL }, { "97", NULL }, { "98", NULL },
++       { "99", NULL }, { "100", NULL }, { "101", NULL }, { "102", NULL }, { "103", NULL },
++       { "104", NULL }, { "105", NULL }, { "106", NULL }, { "107", NULL }, { "108", NULL },
++       { "109", NULL }, { "110", NULL }, { "111", NULL }, { "112", NULL }, { "113", NULL },
++       { "114", NULL }, { "115", NULL }, { "116", NULL }, { "117", NULL }, { "118", NULL },
++       { "119", NULL }, { "120", NULL }, { NULL, NULL } }, "4" },
++   { NULL, NULL, NULL, {{0}}, NULL },
++};
++
+ /* RETRO_LANGUAGE_CHINESE_SIMPLIFIED */
+ 
++struct retro_core_option_definition option_defs_chs[] = {
++   { "gpsp_bios", "BIOS",
++     "选择要使用的 BIOS 镜像。官方 BIOS 需由用户提供。使用非官方 (或内置) BIOS 可能导致部分游戏出现兼容性问题。建议使用任天堂官方 BIOS 以获得最佳效果。",
++     { { "auto", "自动选择" }, { "builtin", "内置 BIOS" }, { "official", "原厂 BIOS" }, { NULL, NULL } }, "auto" },
++   { "gpsp_boot_mode", "启动模式",
++     "选择启动游戏前是否先启动 BIOS。两种模式差别不大。",
++     { { "game", "从游戏启动" }, { "bios", "从 BIOS 启动" }, { NULL, NULL } }, "game" },
++#if defined(HAVE_DYNAREC)
++   { "gpsp_drc", "动态重编译器",
++     "将 CPU 指令动态重新编译为原生指令。大幅提升性能但可能降低精度。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "enabled" },
++#endif
++   { "gpsp_sprlim", "解除精灵限制",
++     "解除实机每扫描线精灵数量的硬件限制。部分游戏依赖此限制来正确绘制 (如隐藏特定精灵)。",
++     { { "disabled", NULL }, { "enabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_rtc", "RTC 支持",
++     "设置卡带的 RTC (实时时钟) 支持。自动检测使用 ROM 数据库，适用于大多数商业游戏。自制 ROM 或 ROM Hack 可能需要强制启用。",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_serial", "连接线连通性",
++     "设置串行 (连接线) 连接。自动会为大多数已知游戏选择合适的设置。",
++     { { "auto", "自动" }, { "disabled", "禁用" }, { "rfu", "GBA 无线接收器" },
++       { "mul_poke", "连接线 - 宝可梦第3世代模式" }, { "mul_aw1", "连接线 - 任天堂大战 1 模式" },
++       { "mul_aw2", "连接线 - 任天堂大战 2 模式" }, { NULL, NULL } }, "auto" },
++   { "gpsp_rumble", "振动支持",
++     "设置卡带的振动支持。自动检测使用 ROM 数据库。",
++     { { "auto", NULL }, { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "auto" },
++   { "gpsp_frameskip", "跳帧",
++     "跳过帧以避免音频缓冲区下溢 (爆音)。'自动'依前端指示。'自动 (阈值)'使用'跳帧阈值 (%)'。'固定间隔'使用'跳帧间隔'。",
++     { { "disabled", "禁用" }, { "auto", "自动" }, { "auto_threshold", "自动 (阈值)" },
++       { "fixed_interval", "固定间隔" }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frameskip_threshold", "跳帧阈值 (%)",
++     "'跳帧'设为'自动 (阈值)'时，指定音频缓冲区占用率低于此值时跳帧。",
++     { { "15", NULL }, { "18", NULL }, { "21", NULL }, { "24", NULL }, { "27", NULL },
++       { "30", NULL }, { "33", NULL }, { "36", NULL }, { "39", NULL }, { "42", NULL },
++       { "45", NULL }, { "48", NULL }, { "51", NULL }, { "54", NULL }, { "57", NULL },
++       { "60", NULL }, { NULL, NULL } }, "33" },
++   { "gpsp_frameskip_interval", "跳帧间隔",
++     "'跳帧'设为'固定间隔'时，渲染 1 帧后省略的帧数 ('0'=60fps, '1'=30fps, '2'=15fps)。",
++     { { "0", NULL }, { "1", NULL }, { "2", NULL }, { "3", NULL }, { "4", NULL },
++       { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL }, { "9", NULL },
++       { "10", NULL }, { NULL, NULL } }, "1" },
++   { "gpsp_color_correction", "色彩校正",
++     "调整输出色彩以符合 GBA 实机显示。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_frame_mixing", "帧间混合",
++     "将当前与前一帧以 50:50 混合以模拟 LCD 残影效果。对于利用 LCD 残影产生透明效果的游戏 (F-Zero, 我们的太阳系列等) 是必要的。",
++     { { "enabled", NULL }, { "disabled", NULL }, { NULL, NULL } }, "disabled" },
++   { "gpsp_turbo_period", "连发按键周期",
++     "按住连发 A/B 按键时的重复间隔 (帧数)。",
++     { { "4", NULL }, { "5", NULL }, { "6", NULL }, { "7", NULL }, { "8", NULL },
++       { "9", NULL }, { "10", NULL }, { "11", NULL }, { "12", NULL }, { "13", NULL },
++       { "14", NULL }, { "15", NULL }, { "16", NULL }, { "17", NULL }, { "18", NULL },
++       { "19", NULL }, { "20", NULL }, { "21", NULL }, { "22", NULL }, { "23", NULL },
++       { "24", NULL }, { "25", NULL }, { "26", NULL }, { "27", NULL }, { "28", NULL },
++       { "29", NULL }, { "30", NULL }, { "31", NULL }, { "32", NULL }, { "33", NULL },
++       { "34", NULL }, { "35", NULL }, { "36", NULL }, { "37", NULL }, { "38", NULL },
++       { "39", NULL }, { "40", NULL }, { "41", NULL }, { "42", NULL }, { "43", NULL },
++       { "44", NULL }, { "45", NULL }, { "46", NULL }, { "47", NULL }, { "48", NULL },
++       { "49", NULL }, { "50", NULL }, { "51", NULL }, { "52", NULL }, { "53", NULL },
++       { "54", NULL }, { "55", NULL }, { "56", NULL }, { "57", NULL }, { "58", NULL },
++       { "59", NULL }, { "60", NULL }, { "61", NULL }, { "62", NULL }, { "63", NULL },
++       { "64", NULL }, { "65", NULL }, { "66", NULL }, { "67", NULL }, { "68", NULL },
++       { "69", NULL }, { "70", NULL }, { "71", NULL }, { "72", NULL }, { "73", NULL },
++       { "74", NULL }, { "75", NULL }, { "76", NULL }, { "77", NULL }, { "78", NULL },
++       { "79", NULL }, { "80", NULL }, { "81", NULL }, { "82", NULL }, { "83", NULL },
++       { "84", NULL }, { "85", NULL }, { "86", NULL }, { "87", NULL }, { "88", NULL },
++       { "89", NULL }, { "90", NULL }, { "91", NULL }, { "92", NULL }, { "93", NULL },
++       { "94", NULL }, { "95", NULL }, { "96", NULL }, { "97", NULL }, { "98", NULL },
++       { "99", NULL }, { "100", NULL }, { "101", NULL }, { "102", NULL }, { "103", NULL },
++       { "104", NULL }, { "105", NULL }, { "106", NULL }, { "107", NULL }, { "108", NULL },
++       { "109", NULL }, { "110", NULL }, { "111", NULL }, { "112", NULL }, { "113", NULL },
++       { "114", NULL }, { "115", NULL }, { "116", NULL }, { "117", NULL }, { "118", NULL },
++       { "119", NULL }, { "120", NULL }, { NULL, NULL } }, "4" },
++   { NULL, NULL, NULL, {{0}}, NULL },
++};
++
+ /* RETRO_LANGUAGE_ESPERANTO */
+ 
+ /* RETRO_LANGUAGE_POLISH */
