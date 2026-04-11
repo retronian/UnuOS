@@ -1646,6 +1646,163 @@ static void OptionList_initFromIntl(
 	}
 }
 
+// v2 variant: takes retro_core_option_v2_definition (adds category_key,
+// desc_categorized, info_categorized - ignored here). Categories themselves
+// are not yet used by the minarch UI, but v2 option definitions are.
+static void OptionList_initV2(const struct retro_core_option_v2_definition *defs) {
+	LOG_info("OptionList_initV2\n");
+	int count;
+	for (count=0; defs[count].key; count++);
+
+	config.core.count = count;
+	if (!count) return;
+
+	config.core.options = calloc(count+1, sizeof(Option));
+
+	for (int i=0; i<count; i++) {
+		int len;
+		const struct retro_core_option_v2_definition *def = &defs[i];
+		Option* item = &config.core.options[i];
+
+		len = strlen(def->key) + 1;
+		item->key = calloc(len, sizeof(char));
+		strcpy(item->key, def->key);
+
+		len = strlen(def->desc) + 1;
+		item->name = calloc(len, sizeof(char));
+		strcpy(item->name, getOptionNameFromKey(def->key, def->desc));
+
+		if (def->info) {
+			len = strlen(def->info) + 1;
+			item->desc = calloc(len, sizeof(char));
+			strncpy(item->desc, def->info, len);
+			item->full = calloc(len, sizeof(char));
+			strncpy(item->full, item->desc, len);
+			GFX_wrapText(font.tiny, item->desc, SCALE1(240), 2);
+			GFX_wrapText(font.medium, item->full, SCALE1(240), 7);
+		}
+
+		int vcount;
+		for (vcount=0; def->values[vcount].value; vcount++);
+		item->count = vcount;
+		item->values = calloc(vcount+1, sizeof(char*));
+		item->labels = calloc(vcount+1, sizeof(char*));
+
+		for (int j=0; j<vcount; j++) {
+			const char* value = def->values[j].value;
+			const char* label = def->values[j].label;
+
+			len = strlen(value) + 1;
+			item->values[j] = calloc(len, sizeof(char));
+			strcpy(item->values[j], value);
+
+			if (label) {
+				len = strlen(label) + 1;
+				item->labels[j] = calloc(len, sizeof(char));
+				strcpy(item->labels[j], label);
+			}
+			else {
+				item->labels[j] = item->values[j];
+			}
+		}
+
+		item->value = Option_getValueIndex(item, def->default_value);
+		item->default_value = item->value;
+	}
+}
+
+// v2 merge variant. Same semantics as OptionList_initFromIntl but operates
+// on retro_core_option_v2_definition arrays. Missing keys fall back to us.
+static void OptionList_initV2FromIntl(
+    const struct retro_core_option_v2_definition *us,
+    const struct retro_core_option_v2_definition *local)
+{
+	LOG_info("OptionList_initV2FromIntl\n");
+	if (!us) return;
+	if (!local) { OptionList_initV2(us); return; }
+
+	int count;
+	for (count=0; us[count].key; count++);
+
+	config.core.count = count;
+	if (!count) return;
+
+	config.core.options = calloc(count+1, sizeof(Option));
+
+	for (int i=0; i<count; i++) {
+		const struct retro_core_option_v2_definition *def = &us[i];
+
+		const struct retro_core_option_v2_definition *tdef = NULL;
+		for (int j=0; local[j].key; j++) {
+			if (exactMatch((char*)local[j].key, (char*)def->key)) {
+				tdef = &local[j];
+				break;
+			}
+		}
+
+		Option* item = &config.core.options[i];
+		int len;
+
+		len = strlen(def->key) + 1;
+		item->key = calloc(len, sizeof(char));
+		strcpy(item->key, def->key);
+
+		const char *src_desc = (tdef && tdef->desc) ? tdef->desc : def->desc;
+		len = strlen(src_desc) + 1;
+		item->name = calloc(len, sizeof(char));
+		strcpy(item->name, getOptionNameFromKey(def->key, src_desc));
+
+		const char *src_info = (tdef && tdef->info) ? tdef->info : def->info;
+		if (src_info) {
+			len = strlen(src_info) + 1;
+			item->desc = calloc(len, sizeof(char));
+			strncpy(item->desc, src_info, len);
+			item->full = calloc(len, sizeof(char));
+			strncpy(item->full, item->desc, len);
+			GFX_wrapText(font.tiny, item->desc, SCALE1(240), 2);
+			GFX_wrapText(font.medium, item->full, SCALE1(240), 7);
+		}
+
+		int vcount;
+		for (vcount=0; def->values[vcount].value; vcount++);
+		item->count = vcount;
+		item->values = calloc(vcount+1, sizeof(char*));
+		item->labels = calloc(vcount+1, sizeof(char*));
+
+		for (int j=0; j<vcount; j++) {
+			const char* value = def->values[j].value;
+			const char* us_label = def->values[j].label;
+
+			const char* local_label = NULL;
+			if (tdef) {
+				for (int k=0; tdef->values[k].value; k++) {
+					if (exactMatch((char*)tdef->values[k].value, (char*)value)) {
+						local_label = tdef->values[k].label;
+						break;
+					}
+				}
+			}
+			const char* label = local_label ? local_label : us_label;
+
+			len = strlen(value) + 1;
+			item->values[j] = calloc(len, sizeof(char));
+			strcpy(item->values[j], value);
+
+			if (label) {
+				len = strlen(label) + 1;
+				item->labels[j] = calloc(len, sizeof(char));
+				strcpy(item->labels[j], label);
+			}
+			else {
+				item->labels[j] = item->values[j];
+			}
+		}
+
+		item->value = Option_getValueIndex(item, def->default_value);
+		item->default_value = item->value;
+	}
+}
+
 static void OptionList_vars(const struct retro_variable *vars) {
 	LOG_info("OptionList_vars\n");
 	int count;
@@ -2198,7 +2355,7 @@ static bool environment_callback(unsigned cmd, void *data) { // copied from pico
 		// puts("RETRO_ENVIRONMENT_GET_CORE_OPTIONS_VERSION");
 		unsigned *out = (unsigned *)data;
 		if (out)
-			*out = 1;
+			*out = 2;
 		break;
 	}
 	case RETRO_ENVIRONMENT_SET_CORE_OPTIONS: { /* 53 */
@@ -2220,6 +2377,30 @@ static bool environment_callback(unsigned cmd, void *data) { // copied from pico
 			OptionList_initFromIntl(options->us, options->local);
 		}
 		break;
+	}
+	case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2: { /* 67 */
+		// puts("RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2");
+		const struct retro_core_options_v2 *options = (const struct retro_core_options_v2 *)data;
+		if (options && options->definitions) {
+			OptionList_reset();
+			OptionList_initV2(options->definitions);
+		}
+		// Returning false tells the core that categories are NOT supported;
+		// the core will then use retro_core_option_v2_definition::desc
+		// instead of desc_categorized, which matches our flat menu.
+		return false;
+	}
+	case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL: { /* 68 */
+		// puts("RETRO_ENVIRONMENT_SET_CORE_OPTIONS_V2_INTL");
+		const struct retro_core_options_v2_intl *options = (const struct retro_core_options_v2_intl *)data;
+		if (options && options->us && options->us->definitions) {
+			OptionList_reset();
+			// Merge: prefer translated definitions, fall back to us for missing keys.
+			OptionList_initV2FromIntl(
+				options->us->definitions,
+				options->local ? options->local->definitions : NULL);
+		}
+		return false;
 	}
 	case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY: { /* 55 */
 		// puts("RETRO_ENVIRONMENT_SET_CORE_OPTIONS_DISPLAY");
