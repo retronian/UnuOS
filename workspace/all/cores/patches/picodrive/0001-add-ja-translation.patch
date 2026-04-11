@@ -1,0 +1,382 @@
+diff --git a/platform/libretro/libretro_core_options.h b/platform/libretro/libretro_core_options.h
+index aa5e859..4ad59e8 100644
+--- a/platform/libretro/libretro_core_options.h
++++ b/platform/libretro/libretro_core_options.h
+@@ -463,7 +463,7 @@ struct retro_core_options_v2 options_us = {
+ #ifndef HAVE_NO_LANGEXTRA
+ struct retro_core_options_v2 *options_intl[RETRO_LANGUAGE_LAST] = {
+    &options_us, /* RETRO_LANGUAGE_ENGLISH */
+-   NULL,        /* RETRO_LANGUAGE_JAPANESE */
++   &options_ja, /* RETRO_LANGUAGE_JAPANESE */
+    NULL,        /* RETRO_LANGUAGE_FRENCH */
+    NULL,        /* RETRO_LANGUAGE_SPANISH */
+    NULL,        /* RETRO_LANGUAGE_GERMAN */
+diff --git a/platform/libretro/libretro_core_options_intl.h b/platform/libretro/libretro_core_options_intl.h
+index c598673..40109dd 100644
+--- a/platform/libretro/libretro_core_options_intl.h
++++ b/platform/libretro/libretro_core_options_intl.h
+@@ -40,6 +40,364 @@ extern "C" {
+ 
+ /* RETRO_LANGUAGE_JAPANESE */
+ 
++struct retro_core_option_v2_category option_cats_ja[] = {
++   { "system",      "システム",       "リージョン / ハードウェア選択 / ROMマッピング / Sega CD RAM カートリッジを設定します。" },
++   { "video",       "ビデオ",         "アスペクト比 / LCDフィルター / ビデオレンダラーを設定します。" },
++   { "audio",       "オーディオ",     "サンプリングレート / エミュレート対象オーディオデバイス / ローパスフィルター / FMチップタイプを設定します。" },
++   { "input",       "入力",           "入力デバイスを設定します。" },
++   {
++      "performance",
++      "性能",
++#ifdef DRC_SH2
++      "動的再コンパイラ / フレームスキップを設定します。"
++#else
++      "フレームスキップのパラメータを設定します。"
++#endif
++   },
++   { "hacks",       "エミュレーションハック", "スプライト制限解除 / CPUオーバークロックを設定します。" },
++   { NULL, NULL, NULL },
++};
++
++struct retro_core_option_v2_definition option_defs_ja[] = {
++   {
++      "picodrive_region",
++      "本体リージョン",
++      "リージョン",
++      "本体のリージョンを指定します。'PAL'/'Europe' は 50Hz、'NTSC'/'US' は 60Hz です。誤ったリージョンを選ぶとゲーム速度が変わったりエラーが出る場合があります。",
++      NULL,
++      "system",
++      {
++         { "Auto",       "自動" },
++         { "Japan NTSC", "日本 NTSC" },
++         { "Japan PAL",  "日本 PAL" },
++         { "US",         "アメリカ" },
++         { "Europe",     "ヨーロッパ" },
++         { NULL, NULL },
++      },
++      "Auto"
++   },
++   {
++      "picodrive_smstype",
++      "Master System タイプ",
++      NULL,
++      "Master System コンテンツ実行時にコアがエミュレートするハードウェア (SMS または Game Gear) を選びます。",
++      NULL,
++      "system",
++      {
++         { "Auto",          "自動" },
++         { "Game Gear",     NULL },
++         { "Master System", NULL },
++         { "SG-1000",       NULL },
++         { "SC-3000",       NULL },
++         { NULL, NULL },
++       },
++      "Auto"
++   },
++   {
++      "picodrive_smsmapper",
++      "Master System ROM マッピング",
++      NULL,
++      "コアが適用する ROM マッパーを選択します。'自動' は多くのコンテンツで動作しますが、一部で自動検出に失敗することがあります。",
++      NULL,
++      "system",
++      {
++         { "Auto",          "自動" },
++         { "Sega",          NULL },
++         { "Codemasters",   NULL },
++         { "Korea",         "韓国" },
++         { "Korea MSX",     "韓国 MSX" },
++         { "Korea X-in-1",  "韓国 X-in-1" },
++         { "Korea 4-Pak",   "韓国 4-Pak" },
++         { "Korea Janggun", "韓国 Janggun" },
++         { "Korea Nemesis", "韓国 Nemesis" },
++         { "Taiwan 8K RAM", "台湾 8K RAM" },
++         { NULL, NULL },
++       },
++      "Auto"
++   },
++   {
++      "picodrive_smstms",
++      "TMSモード時の Master System パレット",
++      NULL,
++      "SMS ゲームが SG-1000 グラフィックモードで動作するときに使用するカラーパレットを選択します。",
++      NULL,
++      "system",
++      {
++         { "SMS",     NULL },
++         { "SG-1000", NULL },
++         { NULL, NULL },
++       },
++      "SMS"
++   },
++   {
++      "picodrive_ramcart",
++      "Sega CD RAM カートリッジ",
++      NULL,
++      "セーブデータ用の Sega CD RAM カートリッジをエミュレートします。警告: 有効にすると内部セーブデータ (BRAM) は破棄されます。",
++      NULL,
++      "system",
++      {
++         { "disabled", "無効" },
++         { "enabled",  "有効" },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "picodrive_aspect",
++      "コア提供アスペクト比",
++      NULL,
++      "コンテンツのアスペクト比を選択します。RetroArch のアスペクト比が「コア提供」に設定されている場合のみ適用されます。",
++      NULL,
++      "video",
++      {
++         { "PAR", NULL },
++         { "4/3", "4:3" },
++         { "CRT", NULL },
++         { NULL, NULL },
++      },
++      "PAR"
++   },
++   {
++      "picodrive_ggghost",
++      "LCDゴーストフィルター",
++      NULL,
++      "Game Gear や Genesis Nomad の LCD パネルの表示特性を模倣する「ゴースト」フィルターを適用します。",
++      NULL,
++      "video",
++      {
++         { "off",    "無効" },
++         { "weak",   "弱" },
++         { "normal", "標準" },
++         { NULL, NULL },
++      },
++      "off"
++   },
++   {
++      "picodrive_renderer",
++      "ビデオレンダラー",
++      "レンダラー",
++      "ビデオレンダリング方式を指定します。「精密」は最も正確ですが最も遅いです。「良好」は高速ですが、フレーム途中で色変更が頻発すると失敗します。「高速」は 1パスで完全なフレームを描画し、フレーム途中のパレット/スプライト更新に依存するゲームとは互換性がありません。",
++      NULL,
++      "video",
++      {
++         { "accurate", "精密" },
++         { "good",     "良好" },
++         { "fast",     "高速" },
++         { NULL, NULL },
++      },
++      "accurate"
++   },
++   {
++      "picodrive_sound_rate",
++      "オーディオサンプリングレート (Hz)",
++      "サンプリングレート (Hz)",
++      "値を高くすると音質が向上します。低くすると性能が向上する場合があります。「native」は Mega Drive のサウンドチップのレート (約 53000Hz) です。最も正確な音を望むなら選択してください。",
++      NULL,
++      "audio",
++      {
++         { "16000",  NULL },
++         { "22050",  NULL },
++         { "32000",  NULL },
++         { "44100",  NULL },
++         { "native", "ネイティブ" },
++         { NULL, NULL },
++      },
++      "44100"
++   },
++   {
++      "picodrive_fm_filter",
++      "FM フィルター",
++      NULL,
++      "非ネイティブビットレート時の Mega Drive FM サウンド用フィルターを有効化します。音質が向上する代わりに目立って遅くなります。",
++      NULL,
++      "audio",
++      {
++         { "off", "無効" },
++         { "on",  "有効" },
++         { NULL, NULL },
++      },
++      "off"
++   },
++   {
++      "picodrive_smsfm",
++      "Master System FM サウンドユニット",
++      NULL,
++      "SMS FM サウンドユニットのエミュレーションを有効にします。一部のゲームでは高品質な音が出ますが、日本国外のタイトルは動作しないことがあります。",
++      NULL,
++      "audio",
++      {
++         { "off", "無効" },
++         { "on",  "有効" },
++         { NULL, NULL },
++      },
++      "off"
++   },
++   {
++      "picodrive_fmchip",
++      "Mega Drive FM チップタイプ",
++      NULL,
++      "Mega Drive/Genesis の FM チップタイプを選択します。モデル1は主に YM2612 を使用し、独特の歪みがあります。YM3438 はモデル2で使われました。",
++      NULL,
++      "audio",
++      {
++         { "ym2612", "YM2612" },
++         { "ym3438", "YM3438" },
++         { NULL, NULL },
++      },
++      "off"
++   },
++   {
++      "picodrive_audio_filter",
++      "オーディオフィルター",
++      NULL,
++      "モデル1 Mega Drive/Genesis の特徴的な音を再現するため、ローパスフィルターを有効にします。物理的ローパスフィルターを使っていたのはモデル1とその拡張 (Sega CD, 32X) のみです。",
++      NULL,
++      "audio",
++      {
++         { "disabled", "無効" },
++         { "low-pass", "ローパス" },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "picodrive_lowpass_range",
++      "ローパスフィルター %",
++      NULL,
++      "ローパスフィルターのカットオフ周波数を指定します。値が高いほど広い高音域が減衰し、フィルターが強く感じられます。",
++      NULL,
++      "audio",
++      {
++         { "5",  NULL }, { "10", NULL }, { "15", NULL }, { "20", NULL },
++         { "25", NULL }, { "30", NULL }, { "35", NULL }, { "40", NULL },
++         { "45", NULL }, { "50", NULL }, { "55", NULL }, { "60", NULL },
++         { "65", NULL }, { "70", NULL }, { "75", NULL }, { "80", NULL },
++         { "85", NULL }, { "90", NULL }, { "95", NULL },
++         { NULL, NULL },
++      },
++      "60"
++   },
++   {
++      "picodrive_input1",
++      "入力デバイス 1",
++      NULL,
++      "スロット1 に接続するコントローラータイプを選択します。マルチプレイヤーアダプタは両スロットを使用します。",
++      NULL,
++      "input",
++      {
++         { "3 button pad", "3ボタンパッド" },
++         { "6 button pad", "6ボタンパッド" },
++         { "team player", "Sega 4プレイヤーアダプタ" },
++         { "4way play", "EA 4way Play アダプタ" },
++         { "None", "なし" },
++         { NULL, NULL },
++      },
++      "3 button pad"
++   },
++   {
++      "picodrive_input2",
++      "入力デバイス 2",
++      NULL,
++      "スロット2 に接続するコントローラータイプを選択します。スロット1 にマルチプレイヤーアダプタが接続されているとこの設定は無視されます。",
++      NULL,
++      "input",
++      {
++         { "3 button pad", "3ボタンパッド" },
++         { "6 button pad", "6ボタンパッド" },
++         { "None", "なし" },
++         { NULL, NULL },
++      },
++      "3 button pad"
++   },
++#ifdef DRC_SH2
++   {
++      "picodrive_drc",
++      "動的再コンパイラ",
++      NULL,
++      "動的再コンパイラを有効にして性能を向上させます。インタプリタ CPU コアより精度は落ちますが、大幅に高速化します。",
++      NULL,
++      "performance",
++      {
++         { "enabled",  "有効" },
++         { "disabled", "無効" },
++         { NULL, NULL },
++      },
++      "enabled"
++   },
++#endif
++   {
++      "picodrive_frameskip",
++      "フレームスキップ",
++      NULL,
++      "オーディオバッファのアンダーラン (音割れ) を避けるためフレームをスキップします。描画のなめらかさを犠牲に性能を向上させます。「自動」はフロントエンド指示に従います。「手動」は「フレームスキップしきい値 (%)」を使用します。",
++      NULL,
++      "performance",
++      {
++         { "disabled", "無効" },
++         { "auto",     "自動" },
++         { "manual",   "手動" },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "picodrive_frameskip_threshold",
++      "フレームスキップしきい値 (%)",
++      NULL,
++      "「フレームスキップ」が「手動」の時、オーディオバッファ使用率がこの値を下回るとフレームをスキップします。値が高いほど音割れを抑える代わりにフレームスキップが頻発します。",
++      NULL,
++      "performance",
++      {
++         { "15", NULL }, { "18", NULL }, { "21", NULL }, { "24", NULL },
++         { "27", NULL }, { "30", NULL }, { "33", NULL }, { "36", NULL },
++         { "39", NULL }, { "42", NULL }, { "45", NULL }, { "48", NULL },
++         { "51", NULL }, { "54", NULL }, { "57", NULL }, { "60", NULL },
++         { NULL, NULL },
++      },
++      "33"
++   },
++   {
++      "picodrive_sprlim",
++      "スプライト制限解除",
++      NULL,
++      "スキャンラインあたりスプライト数の元々のハードウェア制限を解除します。ちらつきは減りますが、ハード制限を利用して特殊効果を生成する一部ゲームで視覚的な不具合が起きる場合があります。",
++      NULL,
++      "hacks",
++      {
++         { "disabled", "無効" },
++         { "enabled",  "有効" },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   {
++      "picodrive_overclk68k",
++      "68K オーバークロック",
++      NULL,
++      "エミュレート対象の 68K チップをオーバークロックします。スローダウンを軽減できますが不具合を引き起こす可能性があります。",
++      NULL,
++      "hacks",
++      {
++         { "disabled", "無効" },
++         { "+25%",     NULL },
++         { "+50%",     NULL },
++         { "+75%",     NULL },
++         { "+100%",    NULL },
++         { "+200%",    NULL },
++         { "+400%",    NULL },
++         { NULL, NULL },
++      },
++      "disabled"
++   },
++   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
++};
++
++struct retro_core_options_v2 options_ja = {
++   option_cats_ja,
++   option_defs_ja
++};
++
+ /* RETRO_LANGUAGE_FRENCH */
+ 
+ /* RETRO_LANGUAGE_SPANISH */
