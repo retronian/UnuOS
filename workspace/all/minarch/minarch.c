@@ -1538,12 +1538,114 @@ static void OptionList_init(const struct retro_core_option_definition *defs) {
 			
 			item->value = Option_getValueIndex(item, def->default_value);
 			item->default_value = item->value;
-			
+
 			// LOG_info("\tINIT %s (%s) TO %s (%s)\n", item->name, item->key, item->labels[item->value], item->values[item->value]);
 		}
 	}
 	// fflush(stdout);
 }
+
+// Like OptionList_init, but uses `us` as the canonical list and falls back
+// to `local` translations for any matching keys / values. Unknown local
+// entries are ignored. This lets a core provide a partial translation that
+// covers only the most user-facing options.
+static void OptionList_initFromIntl(
+    const struct retro_core_option_definition *us,
+    const struct retro_core_option_definition *local)
+{
+	LOG_info("OptionList_initFromIntl\n");
+	if (!us) return;
+	if (!local) { OptionList_init(us); return; }
+
+	int count;
+	for (count=0; us[count].key; count++);
+
+	config.core.count = count;
+	if (!count) return;
+
+	config.core.options = calloc(count+1, sizeof(Option));
+
+	for (int i=0; i<count; i++) {
+		const struct retro_core_option_definition *def = &us[i];
+
+		// Find matching local entry by key
+		const struct retro_core_option_definition *tdef = NULL;
+		for (int j=0; local[j].key; j++) {
+			if (exactMatch((char*)local[j].key, (char*)def->key)) {
+				tdef = &local[j];
+				break;
+			}
+		}
+
+		Option* item = &config.core.options[i];
+		int len;
+
+		// key: always canonical (from us)
+		len = strlen(def->key) + 1;
+		item->key = calloc(len, sizeof(char));
+		strcpy(item->key, def->key);
+
+		// name (desc): prefer translated
+		const char *src_desc = (tdef && tdef->desc) ? tdef->desc : def->desc;
+		len = strlen(src_desc) + 1;
+		item->name = calloc(len, sizeof(char));
+		strcpy(item->name, getOptionNameFromKey(def->key, src_desc));
+
+		// info (long description): prefer translated, accept missing
+		const char *src_info = (tdef && tdef->info) ? tdef->info : def->info;
+		if (src_info) {
+			len = strlen(src_info) + 1;
+			item->desc = calloc(len, sizeof(char));
+			strncpy(item->desc, src_info, len);
+			item->full = calloc(len, sizeof(char));
+			strncpy(item->full, item->desc, len);
+			GFX_wrapText(font.tiny, item->desc, SCALE1(240), 2);
+			GFX_wrapText(font.medium, item->full, SCALE1(240), 7);
+		}
+
+		// values: keys from us, labels prefer translated
+		int vcount;
+		for (vcount=0; def->values[vcount].value; vcount++);
+
+		item->count = vcount;
+		item->values = calloc(vcount+1, sizeof(char*));
+		item->labels = calloc(vcount+1, sizeof(char*));
+
+		for (int j=0; j<vcount; j++) {
+			const char* value = def->values[j].value;
+			const char* us_label = def->values[j].label;
+
+			// lookup matching local label by value
+			const char* local_label = NULL;
+			if (tdef) {
+				for (int k=0; tdef->values[k].value; k++) {
+					if (exactMatch((char*)tdef->values[k].value, (char*)value)) {
+						local_label = tdef->values[k].label;
+						break;
+					}
+				}
+			}
+			const char* label = local_label ? local_label : us_label;
+
+			len = strlen(value) + 1;
+			item->values[j] = calloc(len, sizeof(char));
+			strcpy(item->values[j], value);
+
+			if (label) {
+				len = strlen(label) + 1;
+				item->labels[j] = calloc(len, sizeof(char));
+				strcpy(item->labels[j], label);
+			}
+			else {
+				item->labels[j] = item->values[j];
+			}
+		}
+
+		item->value = Option_getValueIndex(item, def->default_value);
+		item->default_value = item->value;
+	}
+}
+
 static void OptionList_vars(const struct retro_variable *vars) {
 	LOG_info("OptionList_vars\n");
 	int count;
@@ -2110,11 +2212,12 @@ static bool environment_callback(unsigned cmd, void *data) { // copied from pico
 	case RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL: { /* 54 */
 		// puts("RETRO_ENVIRONMENT_SET_CORE_OPTIONS_INTL");
 		const struct retro_core_options_intl *options = (const struct retro_core_options_intl *)data;
-		if (options) {
+		if (options && options->us) {
 			OptionList_reset();
-			// prefer the localized variant when the core provides one; fall back to us
-			if (options->local) OptionList_init(options->local);
-			else if (options->us) OptionList_init(options->us);
+			// Merge: walk the canonical us list, substitute translated
+			// name/info/labels from local where matching keys exist.
+			// Keys missing from local fall back to English automatically.
+			OptionList_initFromIntl(options->us, options->local);
 		}
 		break;
 	}
