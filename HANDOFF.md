@@ -139,14 +139,23 @@ cd workspace/linux
 
 ### ✅ Phase 4b (libretro): コアオプション多言語化
 - minarch に `RETRO_ENVIRONMENT_GET_LANGUAGE` ハンドラを追加（`lang.retro_lang` を返す）
-- `SET_CORE_OPTIONS_INTL` (v1) で `options->local` を優先使用するよう修正
+- `SET_CORE_OPTIONS_INTL` (v1) で merge-aware 実装：`options->local` の欠けたキーは `us` にフォールバック
+- **minarch v2 対応** (コミット `0c0e2d2`):
+  - `GET_CORE_OPTIONS_VERSION` は 2 を返す
+  - `SET_CORE_OPTIONS_V2` / `SET_CORE_OPTIONS_V2_INTL` ハンドラ
+  - `OptionList_initV2Full()` / `OptionList_initV2FromIntl()` は v1 と同じ merge セマンティクス
+- **カテゴリ表示対応** (コミット `d418561` + `5194739`):
+  - Option 構造体に `category_key` / `category_name` を追加
+  - `OptionEmulator_openMenu` で `category_key` を qsort で安定ソート
+  - 各カテゴリ グループの先頭オプションに `[カテゴリ名] オプション名` とプレフィックス表示
+  - カテゴリ名は local_cats からの翻訳を優先、未翻訳は us_cats にフォールバック
 - **コア側翻訳パッチ** (`workspace/all/cores/patches/<core>/`):
-  - ✅ **snes9x2005_plus**: 4言語 (ja/zh_cn/zh_tw/ko) フル翻訳
-  - ✅ **gpsp**: 4言語 (ja/zh_cn/zh_tw/ko) フル翻訳
-  - ✅ **picodrive**: ja のみ
-  - ⏳ **pcsx_rearmed**: **未着手** (73オプションで大規模、Pass 2 へ)
+  - ✅ **snes9x2005_plus**: 4言語 (ja/zh_cn/zh_tw/ko) フル翻訳 (7 オプション)
+  - ✅ **gpsp**: 4言語 (ja/zh_cn/zh_tw/ko) フル翻訳 (13 オプション)
+  - ✅ **picodrive**: 4言語 (ja/zh_cn/zh_tw/ko) フル翻訳 (21 オプション)
+  - ✅ **pcsx_rearmed**: 4言語 (ja/zh_cn/zh_tw/ko) 全 73 オプション完全翻訳
 - 既訳コア（未修正で利用中）:
-  - fceumm / gambatte / mgba / mednafen_pce_fast は upstream で ja/zh/ko を持つ
+  - fceumm / gambatte / mednafen_pce_fast は upstream で ja/zh_cn/zh_tw/ko を持つ
 
 ### ✅ Extras 概念の撤去 + PCE 昇格
 - `skeleton/EXTRAS/` を完全削除
@@ -164,13 +173,15 @@ cd workspace/linux
 
 | Core | エミュ対象 | 翻訳（コアオプション） |
 |---|---|---|
-| fceumm | NES | ja/zh/ko (upstream) |
-| gambatte | GB / GBC | ja/zh/ko (upstream) |
-| gpsp | GBA | **ja/zh_cn/zh_tw/ko (OneOS patch)** |
-| picodrive | Mega Drive / Genesis / 32X / Mega CD / SMS / Game Gear | **ja (OneOS patch)** |
-| snes9x2005_plus | SNES / Super Famicom | **ja/zh_cn/zh_tw/ko (OneOS patch)** |
-| pcsx_rearmed | PlayStation | **未翻訳** (Pass 2) |
-| mednafen_pce_fast | PC Engine / TurboGrafx-16 | ja/zh/ko (upstream) |
+| fceumm | NES | ja/zh_cn/zh_tw/ko (upstream) |
+| gambatte | GB / GBC | ja/zh_cn/zh_tw/ko (upstream) |
+| gpsp | GBA | **ja/zh_cn/zh_tw/ko (OneOS patch) — 13 options** |
+| picodrive | Mega Drive / Genesis / 32X / Mega CD / SMS / Game Gear | **ja/zh_cn/zh_tw/ko (OneOS patch) — 21 options** |
+| snes9x2005_plus | SNES / Super Famicom | **ja/zh_cn/zh_tw/ko (OneOS patch) — 7 options** |
+| pcsx_rearmed | PlayStation | **ja/zh_cn/zh_tw/ko (OneOS patch) — 全 73 options** |
+| mednafen_pce_fast | PC Engine / TurboGrafx-16 | ja/zh_cn/zh_tw/ko (upstream) |
+
+**全 BASE 7 コアが ja/zh_cn/zh_tw/ko 4 言語すべてでカテゴリも含め翻訳完了**。minarch 側の merge-aware fallback により、local struct が us より少ない場合でも欠けたキーは英語で表示される。
 
 EXTRAS にあった mgba / race / mednafen_vb / mednafen_supafaust / pokemini / fake-08 は **廃止**。Miyoo Mini Flip も現状対象外。
 
@@ -186,6 +197,16 @@ EXTRAS にあった mgba / race / mednafen_vb / mednafen_supafaust / pokemini / 
 ## コミット履歴（重要なもの）
 
 ```
+5194739 minarch: v2 category name prefix display
+d418561 minarch: group core options by v2 category_key
+fccc3d9 cores: complete pcsx_rearmed zh_cn/zh_tw/ko (all 73 options)
+e022223 cores: extend pcsx_rearmed translation with zh_cn/zh_tw/ko
+09e5281 cores: extend picodrive translation with zh_cn/zh_tw/ko
+6d81432 cores: complete pcsx_rearmed ja translation (all 73 options)
+0c0e2d2 minarch: support libretro core options v2 interface
+3fae297 cores: add pcsx_rearmed partial ja translation
+840b270 minarch: merge-aware SET_CORE_OPTIONS_INTL fallback
+6f987f3 docs: add HANDOFF.md for AI session handoff
 d92f478 cores: add picodrive ja translation + fix GIT_REVISION glob
 bbded10 cores: add snes9x2005_plus and gpsp translation patches
 991d400 phase 4b: additional localization + Settings UI + libretro i18n + restructure
@@ -198,26 +219,25 @@ minui-fork-point (tag) → dbf8943 (upstream MinUI の最終状態)
 ## 現在の TODO / 保留中
 
 ### 優先度高
-1. **pcsx_rearmed 翻訳**（Pass 2）
-   - 73 オプション、値配列が巨大（gun adjust は -40〜+40 の 81 値等）
-   - 推奨アプローチ: `workspace/all/cores/patches/pcsx_rearmed/` にパッチとして追加
-   - マクロで値配列を共有すると line 数を減らせる
-   - 日本語のみで OK
-2. **pcsx_rearmed を除く 3 コアの追加言語** (zh_cn / zh_tw / ko)
-   - picodrive は ja のみ。他も同じ方針で後から追加
+1. **実機総合テスト**
+   - 7 コアすべてで Options > Emulator メニューが日本語（zh/ko も確認可）で表示されることを確認
+   - 特に **カテゴリプレフィックス表示** (`[システム] リージョン` 等) が正しく動作するかチェック
+   - 現状 binary level では全 core の翻訳キーワードを grep で確認済み
 
 ### 優先度中
-3. **minarch の SET_CORE_OPTIONS_V2_INTL 対応**
-   - 現在は v1 の `SET_CORE_OPTIONS_INTL` のみ。v2 (categories 付き) のハンドラも追加すると、v2 core の翻訳が自動で効く
-   - fceumm や mednafen_pce_fast は v2 で提供しているので、v2 ハンドラがあれば翻訳が確実に使われる（現状は v1 fallback で動いている可能性）
-4. **`workspace/miyoomini/cores/makefile` の setup 順序**
+2. **カテゴリ表示のさらなる改善**
+   - 現状: カテゴリ先頭オプションに `[カテゴリ名]` プレフィックスを付けるのみ
+   - 改善案: 非選択 "ヘッダー行" としてカテゴリ名を表示、またはサブメニュー化
+   - サブメニュー化する場合は `Menu_options` の挙動拡張が必要
+3. **`workspace/miyoomini/cores/makefile` の setup 順序**
    - `setup` で `rm -rf ./build` だけでなく core の src/ 配下の stale `.o` が残る場合がある
    - 翻訳パッチを入れ替えたときは、対応 core の `.patched-all` を削除して `libretro.o` も削除する必要がある
 
 ### 優先度低
-5. **Cloud sync (Phase 3)** — Miyoo Mini Plus は WiFi なしなので romu (Go 製 ROM manager) 経由で PC → SD カード → device の同期方式を想定
-6. **game DB 連携** — retrogame-db / gamelist-ja との連携
-7. **box art 表示** — オプション機能として
+4. **Cloud sync (Phase 3)** — Miyoo Mini Plus は WiFi なしなので romu (Go 製 ROM manager) 経由で PC → SD カード → device の同期方式を想定
+5. **game DB 連携** — retrogame-db / gamelist-ja との連携
+6. **box art 表示** — オプション機能として
+7. **upstream PR** — OneOS コア翻訳パッチ (snes9x2005_plus / gpsp / picodrive / pcsx_rearmed の ja/zh/ko) は upstream にも貢献価値あり。各 core リポジトリに PR 提出を検討
 
 ## 注意事項 / 文化的ガイドライン
 
