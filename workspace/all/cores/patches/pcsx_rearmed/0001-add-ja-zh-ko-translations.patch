@@ -25,7 +25,7 @@ index e049c6f..14fff41 100644
     NULL,        /* RETRO_LANGUAGE_POLISH */
     NULL,        /* RETRO_LANGUAGE_VIETNAMESE */
 diff --git a/frontend/libretro_core_options_intl.h b/frontend/libretro_core_options_intl.h
-index 5e74450..d2e06ca 100644
+index 5e74450..687d633 100644
 --- a/frontend/libretro_core_options_intl.h
 +++ b/frontend/libretro_core_options_intl.h
 @@ -1,4 +1,4 @@
@@ -412,7 +412,7 @@ index 5e74450..d2e06ca 100644
  /* RETRO_LANGUAGE_FRENCH */
  
  /* RETRO_LANGUAGE_SPANISH */
-@@ -58,10 +398,214 @@ extern "C" {
+@@ -58,10 +398,337 @@ extern "C" {
  
  /* RETRO_LANGUAGE_KOREAN */
  
@@ -476,6 +476,47 @@ index 5e74450..d2e06ca 100644
 +   { "pcsx_rearmed_icache_emulation", "명령 캐시 에뮬레이션", NULL, NULL, NULL, "compat_hack", VALS_KO_OFFON, "enabled" },
 +   { "pcsx_rearmed_exception_emulation", "예외 에뮬레이션", NULL, NULL, NULL, "compat_hack", VALS_KO_OFFON, "disabled" },
 +   { "pcsx_rearmed_cd_turbo", "CD 터보", NULL, NULL, NULL, "compat_hack", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_screen_centering_x", "화면 센터링 X", NULL, NULL, NULL, "video", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_y", "화면 센터링 Y", NULL, NULL, NULL, "video", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_h_adj", "센터링 수평 조정", NULL, NULL, NULL, "video", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_neon_enhancement_no_main", "해상도 향상 스피드 핵", NULL, NULL, NULL, "video", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_neon_enhancement_tex_adj_v2", "텍스처 조정", NULL, NULL, NULL, "video", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_peops_settings", "P.E.Op.S. GPU 설정 표시", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_odd_even_bit", "홀짝 비트 핵", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_expand_screen_width", "화면 너비 확장", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_ignore_brightness", "밝기 무시", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_disable_coord_check", "좌표 검사 비활성화", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_lazy_screen_update", "지연 화면 갱신", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_repeated_triangles", "평면 삼각형 재묘화", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_quads_with_triangles", "사각형을 삼각형으로", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_fake_busy_state", "GPU 비지 상태 위장", NULL, NULL, NULL, "gpu_peops", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_unai_settings", "UNAI GPU 설정 표시", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_old_renderer", "구형 렌더러", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_blending", "블렌딩", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_skipline", "라인 건너뛰기", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_lighting", "라이팅", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_fast_lighting", "빠른 라이팅", NULL, NULL, NULL, "gpu_unai", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_show_input_settings", "입력 설정 표시", NULL, NULL, NULL, "input", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_negcon_deadzone", "NegCon 데드존 (%)", NULL, NULL, NULL, "input", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_negcon_response", "NegCon 트위스트 응답", NULL, NULL, NULL, "input",
++     { { "linear", "선형" }, { "quadratic", "2차" }, { "cubic", "3차" }, { NULL, NULL } }, "linear" },
++   { "pcsx_rearmed_input_sensitivity", "마우스 감도", NULL, NULL, NULL, "input", VALS_KO_AUTO, "1.00" },
++   { "pcsx_rearmed_crosshair1", "크로스헤어 P1", NULL, NULL, NULL, "input",
++     { { "disabled", "사용 안 함" }, { "blue", "파랑" }, { "green", "초록" }, { "red", "빨강" }, { "white", "흰색" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_crosshair2", "크로스헤어 P2", NULL, NULL, NULL, "input",
++     { { "disabled", "사용 안 함" }, { "blue", "파랑" }, { "green", "초록" }, { "red", "빨강" }, { "white", "흰색" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_konamigunadjustx", "코나미 건 X 조정", NULL, NULL, NULL, "input", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_konamigunadjusty", "코나미 건 Y 조정", NULL, NULL, NULL, "input", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustx", "GunCon X 조정", NULL, NULL, NULL, "input", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjusty", "GunCon Y 조정", NULL, NULL, NULL, "input", VALS_KO_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustratiox", "GunCon X 비율", NULL, NULL, NULL, "input", VALS_KO_AUTO, "1.0" },
++   { "pcsx_rearmed_gunconadjustratioy", "GunCon Y 비율", NULL, NULL, NULL, "input", VALS_KO_AUTO, "1.0" },
++   { "pcsx_rearmed_3ds_appcputime", "3DS CPU 시간", NULL, NULL, NULL, "system", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_nocompathacks", "호환성 핵 비활성화", NULL, NULL, NULL, "compat_hack", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_nosmccheck", "(스피드 핵) SMC 검사 비활성화", NULL, NULL, NULL, "speed_hack", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_gteregsunneeded", "(스피드 핵) GTE 레지스터 불필요", NULL, NULL, NULL, "speed_hack", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_nogteflags", "(스피드 핵) GTE 플래그 비활성화", NULL, NULL, NULL, "speed_hack", VALS_KO_OFFON, "disabled" },
++   { "pcsx_rearmed_nostalls", "(스피드 핵) GTE 스톨 비활성화", NULL, NULL, NULL, "speed_hack", VALS_KO_OFFON, "disabled" },
 +   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
 +};
 +
@@ -546,6 +587,47 @@ index 5e74450..d2e06ca 100644
 +   { "pcsx_rearmed_icache_emulation", "指令快取模擬", NULL, NULL, NULL, "compat_hack", VALS_CHT_OFFON, "enabled" },
 +   { "pcsx_rearmed_exception_emulation", "例外模擬", NULL, NULL, NULL, "compat_hack", VALS_CHT_OFFON, "disabled" },
 +   { "pcsx_rearmed_cd_turbo", "CD 加速", NULL, NULL, NULL, "compat_hack", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_screen_centering_x", "畫面置中 X", NULL, NULL, NULL, "video", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_y", "畫面置中 Y", NULL, NULL, NULL, "video", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_h_adj", "置中水平調整", NULL, NULL, NULL, "video", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_neon_enhancement_no_main", "解析度強化速度駭客", NULL, NULL, NULL, "video", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_neon_enhancement_tex_adj_v2", "紋理調整", NULL, NULL, NULL, "video", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_peops_settings", "P.E.Op.S. GPU 設定顯示", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_odd_even_bit", "奇偶位元駭客", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_expand_screen_width", "擴展畫面寬度", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_ignore_brightness", "忽略亮度", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_disable_coord_check", "停用座標檢查", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_lazy_screen_update", "延遲畫面更新", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_repeated_triangles", "平面三角形重繪", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_quads_with_triangles", "四邊形使用三角形", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_fake_busy_state", "GPU 忙碌狀態偽裝", NULL, NULL, NULL, "gpu_peops", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_unai_settings", "UNAI GPU 設定顯示", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_old_renderer", "舊版渲染器", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_blending", "混合", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_skipline", "略過掃描線", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_lighting", "照明", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_fast_lighting", "快速照明", NULL, NULL, NULL, "gpu_unai", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_show_input_settings", "輸入設定顯示", NULL, NULL, NULL, "input", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_negcon_deadzone", "NegCon 死區 (%)", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_negcon_response", "NegCon 扭轉響應", NULL, NULL, NULL, "input",
++     { { "linear", "線性" }, { "quadratic", "二次" }, { "cubic", "三次" }, { NULL, NULL } }, "linear" },
++   { "pcsx_rearmed_input_sensitivity", "滑鼠靈敏度", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "1.00" },
++   { "pcsx_rearmed_crosshair1", "準星顯示 P1", NULL, NULL, NULL, "input",
++     { { "disabled", "停用" }, { "blue", "藍" }, { "green", "綠" }, { "red", "紅" }, { "white", "白" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_crosshair2", "準星顯示 P2", NULL, NULL, NULL, "input",
++     { { "disabled", "停用" }, { "blue", "藍" }, { "green", "綠" }, { "red", "紅" }, { "white", "白" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_konamigunadjustx", "Konami 光槍 X 調整", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_konamigunadjusty", "Konami 光槍 Y 調整", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustx", "GunCon X 調整", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjusty", "GunCon Y 調整", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustratiox", "GunCon X 比率", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "1.0" },
++   { "pcsx_rearmed_gunconadjustratioy", "GunCon Y 比率", NULL, NULL, NULL, "input", VALS_CHT_AUTO, "1.0" },
++   { "pcsx_rearmed_3ds_appcputime", "3DS CPU 時間", NULL, NULL, NULL, "system", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_nocompathacks", "停用相容性駭客", NULL, NULL, NULL, "compat_hack", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_nosmccheck", "(速度駭客) SMC 檢查停用", NULL, NULL, NULL, "speed_hack", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_gteregsunneeded", "(速度駭客) GTE 暫存器不需要", NULL, NULL, NULL, "speed_hack", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_nogteflags", "(速度駭客) GTE 旗標停用", NULL, NULL, NULL, "speed_hack", VALS_CHT_OFFON, "disabled" },
++   { "pcsx_rearmed_nostalls", "(速度駭客) GTE 停滯停用", NULL, NULL, NULL, "speed_hack", VALS_CHT_OFFON, "disabled" },
 +   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
 +};
 +
@@ -616,6 +698,47 @@ index 5e74450..d2e06ca 100644
 +   { "pcsx_rearmed_icache_emulation", "指令缓存仿真", NULL, NULL, NULL, "compat_hack", VALS_CHS_OFFON, "enabled" },
 +   { "pcsx_rearmed_exception_emulation", "异常仿真", NULL, NULL, NULL, "compat_hack", VALS_CHS_OFFON, "disabled" },
 +   { "pcsx_rearmed_cd_turbo", "CD 加速", NULL, NULL, NULL, "compat_hack", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_screen_centering_x", "画面居中 X", NULL, NULL, NULL, "video", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_y", "画面居中 Y", NULL, NULL, NULL, "video", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_screen_centering_h_adj", "居中水平调整", NULL, NULL, NULL, "video", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_neon_enhancement_no_main", "分辨率增强速度黑客", NULL, NULL, NULL, "video", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_neon_enhancement_tex_adj_v2", "纹理调整", NULL, NULL, NULL, "video", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_peops_settings", "P.E.Op.S. GPU 设置显示", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_odd_even_bit", "奇偶位黑客", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_expand_screen_width", "扩展画面宽度", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_ignore_brightness", "忽略亮度", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_disable_coord_check", "禁用坐标检查", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_lazy_screen_update", "延迟画面更新", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_repeated_triangles", "平面三角形重绘", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_quads_with_triangles", "四边形用三角形", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_peops_fake_busy_state", "GPU 忙碌状态伪装", NULL, NULL, NULL, "gpu_peops", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_show_gpu_unai_settings", "UNAI GPU 设置显示", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_old_renderer", "旧版渲染器", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_blending", "混合", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_skipline", "跳过扫描线", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gpu_unai_lighting", "光照", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "enabled" },
++   { "pcsx_rearmed_gpu_unai_fast_lighting", "快速光照", NULL, NULL, NULL, "gpu_unai", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_show_input_settings", "输入设置显示", NULL, NULL, NULL, "input", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_negcon_deadzone", "NegCon 死区 (%)", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_negcon_response", "NegCon 扭转响应", NULL, NULL, NULL, "input",
++     { { "linear", "线性" }, { "quadratic", "二次" }, { "cubic", "三次" }, { NULL, NULL } }, "linear" },
++   { "pcsx_rearmed_input_sensitivity", "鼠标灵敏度", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "1.00" },
++   { "pcsx_rearmed_crosshair1", "准星显示 P1", NULL, NULL, NULL, "input",
++     { { "disabled", "禁用" }, { "blue", "蓝" }, { "green", "绿" }, { "red", "红" }, { "white", "白" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_crosshair2", "准星显示 P2", NULL, NULL, NULL, "input",
++     { { "disabled", "禁用" }, { "blue", "蓝" }, { "green", "绿" }, { "red", "红" }, { "white", "白" }, { NULL, NULL } }, "disabled" },
++   { "pcsx_rearmed_konamigunadjustx", "Konami 光枪 X 调整", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_konamigunadjusty", "Konami 光枪 Y 调整", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustx", "GunCon X 调整", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjusty", "GunCon Y 调整", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "0" },
++   { "pcsx_rearmed_gunconadjustratiox", "GunCon X 比率", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "1.0" },
++   { "pcsx_rearmed_gunconadjustratioy", "GunCon Y 比率", NULL, NULL, NULL, "input", VALS_CHS_AUTO, "1.0" },
++   { "pcsx_rearmed_3ds_appcputime", "3DS CPU 时间", NULL, NULL, NULL, "system", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_nocompathacks", "禁用兼容性黑客", NULL, NULL, NULL, "compat_hack", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_nosmccheck", "(速度黑客) SMC 检查禁用", NULL, NULL, NULL, "speed_hack", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_gteregsunneeded", "(速度黑客) GTE 寄存器不需要", NULL, NULL, NULL, "speed_hack", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_nogteflags", "(速度黑客) GTE 标志禁用", NULL, NULL, NULL, "speed_hack", VALS_CHS_OFFON, "disabled" },
++   { "pcsx_rearmed_nostalls", "(速度黑客) GTE 停滞禁用", NULL, NULL, NULL, "speed_hack", VALS_CHS_OFFON, "disabled" },
 +   { NULL, NULL, NULL, NULL, NULL, NULL, {{0}}, NULL },
 +};
 +
@@ -627,7 +750,7 @@ index 5e74450..d2e06ca 100644
  /* RETRO_LANGUAGE_ESPERANTO */
  
  /* RETRO_LANGUAGE_POLISH */
-@@ -535,6 +1079,14 @@ struct retro_core_options_v2 options_tr = {
+@@ -535,6 +1202,14 @@ struct retro_core_options_v2 options_tr = {
     option_defs_tr
  };
  
