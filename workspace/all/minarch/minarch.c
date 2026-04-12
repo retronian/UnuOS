@@ -3718,14 +3718,34 @@ static int OptionEmulator_openMenu(MenuList* list, int i) {
 		}
 		
 		OptionEmulator_menu.items = calloc(config.core.enabled_count+1, sizeof(MenuItem));
+		// Prepend the category display name to the first option of each
+		// category group, e.g. "[System] Region". Non-categorized options
+		// show unchanged. This works with the stable-sorted list above so
+		// each category prefix appears exactly once per group.
+		const char *prev_cat = NULL;
 		for (int j=0; j<config.core.enabled_count; j++) {
 			Option* option = config.core.enabled_options[j];
 			MenuItem* item = &OptionEmulator_menu.items[j];
 			item->key = option->key;
-			item->name = option->name;
 			item->desc = option->desc;
 			item->value = option->value;
 			item->values = option->labels;
+
+			const char *cur_cat = option->category_key;
+			const char *cat_name = option->category_name;
+			int is_first_in_group = cur_cat && cat_name && (
+				prev_cat == NULL || strcmp(cur_cat, prev_cat) != 0);
+			if (is_first_in_group) {
+				// Allocate "[<category>] <name>" and store as item->name.
+				// Leaked on core switch (same lifetime as the menu items).
+				size_t len = strlen(cat_name) + strlen(option->name) + 4;
+				char *combined = calloc(len, sizeof(char));
+				snprintf(combined, len, "[%s] %s", cat_name, option->name);
+				item->name = combined;
+			} else {
+				item->name = option->name;
+			}
+			prev_cat = cur_cat;
 		}
 	}
 	else {
