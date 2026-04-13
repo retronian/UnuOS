@@ -253,16 +253,21 @@ int GFX_truncateText(TTF_Font* font, const char* in_name, char* out_name, int ma
 }
 int GFX_wrapText(TTF_Font* font, char* str, int max_width, int max_lines) {
 	if (!str) return 0;
-	
+
 	int line_width;
 	int max_line_width = 0;
 	char* line = str;
-	char buffer[MAX_PATH];
-	
+	// Must fit strlen(str) + "..." + \0. CJK info strings can easily exceed
+	// MAX_PATH, so size from input length rather than a fixed stack buffer.
+	int buffer_size = strlen(str) + 8;
+	char* buffer = malloc(buffer_size);
+	if (!buffer) return 0;
+
 	TTF_SizeUTF8(font, line, &line_width, NULL);
 	if (line_width<=max_width) {
 		line_width = GFX_truncateText(font,line,buffer,max_width,0);
 		strcpy(line,buffer);
+		free(buffer);
 		return line_width;
 	}
 	
@@ -290,6 +295,9 @@ int GFX_wrapText(TTF_Font* font, char* str, int max_width, int max_lines) {
 		if (line_width>=max_width) { // wrap
 			if (line_width>max_line_width) max_line_width = line_width;
 			tmp[0] = ' ';
+			// If no previous wrap point (first word already too wide),
+			// break at the current space instead to avoid a NULL deref.
+			if (!prev) prev = tmp;
 			tmp += 1;
 			prev[0] = '\n';
 			prev += 1;
@@ -306,8 +314,9 @@ int GFX_wrapText(TTF_Font* font, char* str, int max_width, int max_lines) {
 	
 	line_width = GFX_truncateText(font,line,buffer,max_width,0);
 	strcpy(line,buffer);
-	
+
 	if (line_width>max_line_width) max_line_width = line_width;
+	free(buffer);
 	return max_line_width;
 }
 
