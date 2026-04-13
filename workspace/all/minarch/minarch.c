@@ -127,6 +127,9 @@ static int Zip_copy(FILE* zip, FILE* dst, size_t size) { // uncompressed?
 	return 0;
 }
 static int Zip_inflate(FILE* zip, FILE* dst, size_t size) { // compressed
+	// size==0 means "size unknown" (data descriptor mode, bit 0x0008 set in
+	// the local header flags). Inflate until Z_STREAM_END instead of byte count.
+	int unknown_size = (size == 0);
 	z_stream stream = {0};
 	size_t have = 0;
 	uint8_t  in[ZIP_CHUNK_SIZE];
@@ -136,9 +139,9 @@ static int Zip_inflate(FILE* zip, FILE* dst, size_t size) { // compressed
 	ret = inflateInit2(&stream, -MAX_WBITS);
 	if (ret != Z_OK)
 		return ret;
-	
+
 	do {
-		size_t insize = MIN(size, ZIP_CHUNK_SIZE);
+		size_t insize = unknown_size ? ZIP_CHUNK_SIZE : MIN(size, ZIP_CHUNK_SIZE);
 
 		stream.avail_in = fread(in, 1, insize, zip);
 		if (ferror(zip)) {
@@ -171,12 +174,12 @@ static int Zip_inflate(FILE* zip, FILE* dst, size_t size) { // compressed
 			}
 		} while (stream.avail_out == 0);
 
-		size -= insize;
-	} while (size && ret != Z_STREAM_END);
+		if (!unknown_size) size -= insize;
+	} while ((unknown_size || size) && ret != Z_STREAM_END);
 
 	(void)inflateEnd(&stream);
 
-	if (!size || ret == Z_STREAM_END) {
+	if (unknown_size ? (ret == Z_STREAM_END) : (!size || ret == Z_STREAM_END)) {
 		return Z_OK;
 	} else {
 		return Z_DATA_ERROR;
@@ -236,19 +239,25 @@ static void Game_open(char* path) {
 			char extension[8];
 			while (1) {
 				if (next) fseek(zip, next, SEEK_CUR);
-				
+
 				if (ZIP_HEADER_SIZE!=fread(header, 1, ZIP_HEADER_SIZE, zip)) break;
-				
-				if ((uint16_t)(header[6]) & 0x0008) break;
-				
+
+				// Bit 0x0008 (data descriptor mode) means sizes are 0 in the
+				// local header and the real values follow the compressed data.
+				// Zip_inflate handles size==0 by reading until Z_STREAM_END.
+				// Only the first matching entry is extracted, so we don't need
+				// to seek past an unknown-size record.
+				int data_descriptor = ((uint16_t)(header[6]) & 0x0008) != 0;
+
 				len = ZIP_LE_READ16(&header[26]);
 				if (len>=MAX_PATH) break;
-				
+
 				if (len!=fread(filename,1,len,zip)) break;
 				filename[len] = '\0';
 				LOG_info("filename: %s\n", filename);
-				
+
 				compressed_size = ZIP_LE_READ32(&header[18]);
+				if (data_descriptor) compressed_size = 0;
 				
 				fseek(zip, ZIP_LE_READ16(&header[28]), SEEK_CUR);
 				next = compressed_size;
@@ -1807,9 +1816,15 @@ static void OptionList_initV2FromIntl(
 		}
 
 		const char *src_desc = (tdef && tdef->desc) ? tdef->desc : def->desc;
+		if (!src_desc) src_desc = def->key;
+		const char *name_override = getOptionNameFromKey(def->key, src_desc);
+		// Allocate for the longer of src_desc and the optional override so the
+		// override name fits when it replaces src_desc.
 		len = strlen(src_desc) + 1;
+		int name_len = strlen(name_override) + 1;
+		if (name_len > len) len = name_len;
 		item->name = calloc(len, sizeof(char));
-		strcpy(item->name, getOptionNameFromKey(def->key, src_desc));
+		strcpy(item->name, name_override);
 
 		const char *src_info = (tdef && tdef->info) ? tdef->info : def->info;
 		if (src_info) {
