@@ -10,6 +10,12 @@ English UI:
 | -- | -- |
 | ![English launcher](docs/screenshots/launcher-en.png) | ![Tetris with cover art](docs/screenshots/tetris-en.png) |
 
+Simplified Chinese UI:
+
+| Launcher | Game selected |
+| -- | -- |
+| ![Simplified Chinese launcher](docs/screenshots/launcher-zh-cn.png) | ![Tetris with cover art](docs/screenshots/tetris-zh-cn.png) |
+
 Japanese UI (multi-byte ROM names render correctly):
 
 | Launcher | Game selected |
