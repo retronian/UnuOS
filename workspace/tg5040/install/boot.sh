@@ -3,7 +3,7 @@
 
 PLATFORM="tg5040"
 SDCARD_PATH="/mnt/SDCARD"
-UPDATE_PATH="$SDCARD_PATH/MinUI.zip"
+UPDATE_PATH="$SDCARD_PATH/OneOS.zip"
 SYSTEM_PATH="$SDCARD_PATH/.system"
 
 # for Brick
@@ -54,7 +54,7 @@ if [ -f "$UPDATE_PATH" ]; then
 	fi
 fi
 
-LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/MinUI.pak/launch.sh"
+LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/OneOS.pak/launch.sh"
 if [ -f "$LAUNCH_PATH" ] ; then
 	exec "$LAUNCH_PATH"
 fi
