@@ -75,13 +75,13 @@ OneOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 ### Tested by maintainer
 
 - Miyoo Mini Plus
+- Miyoo Flip
 
 ### In codebase, untested by maintainer
 
 | Device | Platform |
 | -- | -- |
 | Miyoo Mini / Miyoo Mini Flip | `miyoomini` (single build, model detected at runtime) |
-| Miyoo Flip | `my355` |
 | Miyoo A30 | `my282` |
 | Anbernic RG35XX Plus / H / 2024 / SP, RG34XX, RG CubeXX | `rg35xxplus` (single build, model detected at runtime) |
 | Anbernic RG35XX (older model) | `rg35xx` |

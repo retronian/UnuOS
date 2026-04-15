@@ -20,15 +20,3 @@ index 40805b8adf8101c90e68c5418e7ea697905562ac..c57d3c28dd22040f19299402a0d569f3
  else ifeq ($(platform), gcw0)
     TARGET := $(TARGET_NAME)_libretro_gcw0.so
     CC = /opt/gcw0-toolchain/usr/bin/mipsel-linux-gcc
-diff --git forkSrcPrefix/platform/libretro/libretro.cpp forkDstPrefix/platform/libretro/libretro.cpp
-index bc160dba6d676c7f9c05768f002ea6bce8fe8437..cfa237d9763e2c7092d83aa9fd346c14e4e79db8 100644
---- forkSrcPrefix/platform/libretro/libretro.cpp
-+++ forkDstPrefix/platform/libretro/libretro.cpp
-@@ -517,6 +517,7 @@ EXPORT bool retro_load_game(struct retro_game_info const *info)
-     else {
-         _vm->QueueCartChange(info->path);
-     }
-+	_vm->UpdateAndDraw();
- 
-     return true;
- }

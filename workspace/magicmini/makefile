@@ -18,7 +18,7 @@ all: readmes
 	
 early: $(REQUIRES_351FILES)
 	mkdir -p other
-	cd $(REQUIRES_351FILES) && START_PATH=/storage/TF2 CC=${CROSS_COMPILE}gcc make
+	cd $(REQUIRES_351FILES) && make clean && START_PATH=/storage/TF2 CXX=${CROSS_COMPILE}g++ make
 	
 clean:
 	cd $(REQUIRES_351FILES) && make clean

@@ -13,4 +13,17 @@ case $INFO in
 *"SStar"*)
 	./miyoomini.sh
 	;;
+*)
+	case "$(pwd)" in
+	*"miyoo355/app"*)
+		./my355.sh
+		;;
+	*"miyoo285/app"*)
+		./my282.sh
+		;;
+	*"miyoo354/app"|*"miyoo/app"*)
+		./miyoomini.sh
+		;;
+	esac
+	;;
 esac

@@ -24,7 +24,7 @@ all: readmes
 
 early: $(REQUIRES_UNZIP60) $(REQUIRES_SDL2) $(REQUIRES_DTC) $(REQUIRES_FBSET)
 	mkdir -p other
-	cd $(REQUIRES_DTC) && CC=${CROSS_COMPILE}gcc make NO_PYTHON=1 dtc
+	cd $(REQUIRES_DTC) && CC=${CROSS_COMPILE}gcc make NO_PYTHON=1 EXTRA_CFLAGS="-Wno-error=sign-compare" dtc
 	cd $(REQUIRES_UNZIP60) && make -f unix/Makefile.trimuismart unzip
 	cd $(REQUIRES_FBSET) && make
 	cd $(REQUIRES_SDL2) && CFLAGS="-O2 -march=armv8-a+crc -mtune=cortex-a53 -mcpu=cortex-a53 -ffast-math -ftree-vectorize" \

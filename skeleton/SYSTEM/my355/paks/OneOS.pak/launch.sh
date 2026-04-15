@@ -11,6 +11,9 @@ export SHARED_USERDATA_PATH="$SDCARD_PATH/.userdata/shared"
 export LOGS_PATH="$USERDATA_PATH/logs"
 export DATETIME_PATH="$SHARED_USERDATA_PATH/datetime.txt"
 
+mkdir -p "$LOGS_PATH"
+mkdir -p "$SHARED_USERDATA_PATH/.oneos"
+
 #######################################
 
 export PATH=$SYSTEM_PATH/bin:/usr/miyoo/bin:/usr/miyoo/sbin:$PATH
@@ -54,8 +57,6 @@ keymon.elf > $LOGS_PATH/keymon.txt 2>&1 &
 
 #######################################
 
-mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.minui"
 AUTO_PATH="$USERDATA_PATH/auto.sh"
 if [ -f "$AUTO_PATH" ]; then
 	"$AUTO_PATH" # > $LOGS_PATH/auto.txt 2>&1
@@ -65,11 +66,11 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH="/tmp/minui_exec"
+EXEC_PATH="/tmp/oneos_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH" && sync
 while [ -f "$EXEC_PATH" ]; do
-	minui.elf > $LOGS_PATH/minui.txt 2>&1
+	oneos.elf > $LOGS_PATH/oneos.txt 2>&1
 	echo $CPU_SPEED_PERF > $CPU_PATH
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync
