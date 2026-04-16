@@ -525,8 +525,8 @@ void PLAT_enableBacklight(int enable) {
 }
 
 void PLAT_powerOff(void) {
-	// break the MinUI.pak/launch.sh while loop
-	unlink("/tmp/minui_exec");
+	// break the OneOS.pak/launch.sh while loop
+	unlink("/tmp/oneos_exec");
 	sleep(2);
 
 	SetRawVolume(MUTE_VOLUME_RAW);

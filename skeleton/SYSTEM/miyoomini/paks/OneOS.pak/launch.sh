@@ -1,5 +1,5 @@
 #!/bin/sh
-# MiniUI.pak
+# OneOS.pak
 
 if [ -z "$LCD_INIT" ]; then
 	# an update may have already initilized the LCD
@@ -85,15 +85,17 @@ fi
 
 lumon.elf & # adjust lcd luma and saturation
 
-if $IS_PLUS; then
-	CHARGING=`/customer/app/axp_test | awk -F'[,: {}]+' '{print $7}'`
-	if [ "$CHARGING" == "3" ]; then
-		batmon.elf # &> /mnt/SDCARD/batmon.txt
-	fi
-else
-	CHARGING=`cat /sys/devices/gpiochip0/gpio/gpio59/value`
-	if [ "$CHARGING" == "1" ]; then
-		batmon.elf # &> /mnt/SDCARD/batmon.txt
+if [ "$MY_MODEL" != "MY285" ]; then
+	if $IS_PLUS; then
+		CHARGING=`/customer/app/axp_test | awk -F'[,: {}]+' '{print $7}'`
+		if [ "$CHARGING" == "3" ]; then
+			batmon.elf # &> /mnt/SDCARD/batmon.txt
+		fi
+	else
+		CHARGING=`cat /sys/devices/gpiochip0/gpio/gpio59/value`
+		if [ "$CHARGING" == "1" ]; then
+			batmon.elf # &> /mnt/SDCARD/batmon.txt
+		fi
 	fi
 fi
 

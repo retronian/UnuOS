@@ -33,5 +33,5 @@ echo "Done."
 # self-destruct
 mv $DIR $DIR.disabled
 
-rm -f /tmp/minui_exec
+rm -f /tmp/oneos_exec
 reboot
