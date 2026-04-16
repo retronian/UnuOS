@@ -19,7 +19,7 @@ case $INFO in
 		./my355.sh
 		;;
 	*"miyoo285/app"*)
-		./my282.sh
+		./miyoomini.sh
 		;;
 	*"miyoo354/app"|*"miyoo/app"*)
 		./miyoomini.sh

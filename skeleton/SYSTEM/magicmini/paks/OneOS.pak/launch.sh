@@ -35,7 +35,7 @@ keymon.elf & # &> $SDCARD_PATH/keymon.txt &
 #######################################
 
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.minui"
+mkdir -p "$SHARED_USERDATA_PATH/.oneos"
 AUTO_PATH=$USERDATA_PATH/auto.sh
 if [ -f "$AUTO_PATH" ]; then
 	"$AUTO_PATH" # &> $LOGS_PATH/auto.txt
@@ -45,12 +45,12 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH=/tmp/minui_exec
+EXEC_PATH=/tmp/oneos_exec
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH" && sync
 while [ -f "$EXEC_PATH" ]; do
 	echo $CPU_SPEED_PERF > $CPU_PATH
-	minui.elf &> $LOGS_PATH/minui.txt
+	oneos.elf &> $LOGS_PATH/oneos.txt
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync
 	

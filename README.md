@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/oneos-logo.png" alt="OneOS" width="240">
+</p>
+
 # OneOS
 
 OneOS is a retro game launcher and libretro frontend. It is a fork of [MinUI](https://github.com/shauninman/MinUI) with added support for CJK (Japanese, Simplified/Traditional Chinese, Korean) as well as French and Spanish.
@@ -76,12 +80,13 @@ OneOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 
 - Miyoo Mini Plus
 - Miyoo Flip
+- Miyoo Mini Flip
 
 ### In codebase, untested by maintainer
 
 | Device | Platform |
 | -- | -- |
-| Miyoo Mini / Miyoo Mini Flip | `miyoomini` (single build, model detected at runtime) |
+| Miyoo Mini | `miyoomini` |
 | Miyoo A30 | `my282` |
 | Anbernic RG35XX Plus / H / 2024 / SP, RG34XX, RG CubeXX | `rg35xxplus` (single build, model detected at runtime) |
 | Anbernic RG35XX (older model) | `rg35xx` |

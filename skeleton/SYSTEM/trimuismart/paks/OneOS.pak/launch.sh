@@ -1,5 +1,5 @@
 #!/bin/sh
-# MiniUI.pak
+# OneOS.pak
 
 # recover from readonly SD card -------------------------------
 touch /mnt/writetest
@@ -26,7 +26,7 @@ export DATETIME_PATH="$SHARED_USERDATA_PATH/datetime.txt"
 
 mkdir -p "$USERDATA_PATH"
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.minui"
+mkdir -p "$SHARED_USERDATA_PATH/.oneos"
 
 #######################################
 
@@ -71,11 +71,11 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH="/tmp/minui_exec"
+EXEC_PATH="/tmp/oneos_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH"  && sync
 while [ -f $EXEC_PATH ]; do
-	minui.elf &> $LOGS_PATH/minui.txt
+	oneos.elf &> $LOGS_PATH/oneos.txt
 	echo $CPU_SPEED_PERF > $CPU_PATH
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync

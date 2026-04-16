@@ -684,7 +684,7 @@ void PLAT_enableBacklight(int enable) {
 }
 
 void PLAT_powerOff(void) {
-	system("rm -f /tmp/minui_exec && sync");
+	system("rm -f /tmp/oneos_exec && sync");
 	sleep(2);
 
 	SetRawVolume(MUTE_VOLUME_RAW);
@@ -724,6 +724,8 @@ int PLAT_pickSampleRate(int requested, int max) {
 }
 
 char* PLAT_getModel(void) {
+	char* model = getenv("MY_MODEL");
+	if (exactMatch(model,"MY285")) return "Miyoo Mini Flip";
 	return "Miyoo A30";
 }
 
