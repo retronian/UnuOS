@@ -43,7 +43,7 @@ keymon.elf & # > $LOGS_PATH/keymon.txt 2>&1 &
 #######################################
 
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.minui"
+mkdir -p "$SHARED_USERDATA_PATH/.oneos"
 AUTO_PATH="$USERDATA_PATH/auto.sh"
 if [ -f "$AUTO_PATH" ]; then
 	"$AUTO_PATH" # > $LOGS_PATH/auto.txt 2>&1
@@ -67,12 +67,12 @@ fi
 
 #######################################
 
-EXEC_PATH="/tmp/minui_exec"
+EXEC_PATH="/tmp/oneos_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH" && sync
 while [ -f "$EXEC_PATH" ]; do
 	. $HDMI_EXPORT_PATH
-	minui.elf > $LOGS_PATH/minui.txt 2>&1
+	oneos.elf > $LOGS_PATH/oneos.txt 2>&1
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync
 	

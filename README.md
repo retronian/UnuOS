@@ -81,14 +81,16 @@ OneOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 - Miyoo Mini Plus
 - Miyoo Flip
 - Miyoo Mini Flip
+- Anbernic RG CubeXX
+- Anbernic RG 28XX
 
-### In codebase, untested by maintainer
+### Supported device/platform mapping
 
 | Device | Platform |
 | -- | -- |
 | Miyoo Mini | `miyoomini` |
 | Miyoo A30 | `my282` |
-| Anbernic RG35XX Plus / H / 2024 / SP, RG34XX, RG CubeXX | `rg35xxplus` (single build, model detected at runtime) |
+| Anbernic RG35XX Plus / H / 2024 / SP, RG28XX, RG40XX H, RG34XX, RG CubeXX | `rg35xxplus` (single build, model detected at runtime) |
 | Anbernic RG35XX (older model) | `rg35xx` |
 | Anbernic M17 | `m17` |
 | Trimui Smart | `trimuismart` |
@@ -98,9 +100,9 @@ OneOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 | MagicX Mini Zero 28 | `zero28` |
 | GKD Pixel | `gkdpixel` |
 
-### Planned
+## Anbernic RG*XX installation note
 
-- Anbernic RG 28XX
+Anbernic RG*XX devices use a two-card StockOS setup. OneOS follows the same approach as MinUI: keep StockOS on the TF1 card, copy `rg35xxplus/dmenu.bin` to the root of the FAT32 partition on TF1, and copy `OneOS.zip` to the root of the TF2 card that contains your ROMs. The TF2 card remains the OneOS/ROM card.
 
 ## License
 

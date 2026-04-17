@@ -12,7 +12,7 @@ FLAG_PATH=$TF1_PATH/.minstalled
 SDCARD_PATH=$TF1_PATH
 SYSTEM_DIR=/.system
 SYSTEM_FRAG=$SYSTEM_DIR/rg35xxplus
-UPDATE_FRAG=/MinUI.zip
+UPDATE_FRAG=/OneOS.zip
 SYSTEM_PATH=${SDCARD_PATH}${SYSTEM_FRAG}
 UPDATE_PATH=${SDCARD_PATH}${UPDATE_FRAG}
 
@@ -40,7 +40,7 @@ else
 fi
 
 if [ -d ${TF1_PATH}${SYSTEM_FRAG} ] || [ -f ${TF1_PATH}${UPDATE_FRAG} ]; then
-	echo "found MinUI on TF1" >> $TF1_PATH/log.txt
+	echo "found OneOS on TF1" >> $TF1_PATH/log.txt
 	if [ ! -h $TF2_PATH ]; then
 		echo "no system on TF2, unmount and symlink to TF1" >> $TF1_PATH/log.txt
 		umount $TF2_PATH
@@ -76,10 +76,10 @@ if [ -f $UPDATE_PATH ]; then
 	
 	if [ ! -d $SYSTEM_PATH ]; then
 		ACTION=installing
-		echo "install MinUI" >> $TF1_PATH/log.txt
+		echo "install OneOS" >> $TF1_PATH/log.txt
 	else
 		ACTION=updating
-		echo "update MinUI" >> $TF1_PATH/log.txt
+		echo "update OneOS" >> $TF1_PATH/log.txt
 	fi
 	
 	# extract tar.gz from this sh file
@@ -118,9 +118,9 @@ if [ -f $UPDATE_PATH ]; then
 	$SYSTEM_PATH/bin/install.sh >> $TF1_PATH/log.txt
 fi
 
-if [ -f $SYSTEM_PATH/paks/MinUI.pak/launch.sh ]; then
-	echo "launch MinUI" >> $TF1_PATH/log.txt
-	$SYSTEM_PATH/paks/MinUI.pak/launch.sh
+if [ -f $SYSTEM_PATH/paks/OneOS.pak/launch.sh ]; then
+	echo "launch OneOS" >> $TF1_PATH/log.txt
+	$SYSTEM_PATH/paks/OneOS.pak/launch.sh
 else
 	echo "couldn't find launch.sh" >> $TF1_PATH/log.txt
 	if [ -h $TF2_PATH ] && [ "$TF2_PATH" -ef "$TF1_PATH" ]; then
