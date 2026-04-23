@@ -1,4 +1,4 @@
-// OneOS - simple UI string localization
+// UnuUI - simple UI string localization
 // To switch language: write "en", "ja", "zh_cn", "zh_tw", or "ko" to
 // SHARED_USERDATA_PATH/lang.txt
 //

@@ -18,7 +18,7 @@ all:
 	cd ./$(PLATFORM)/libmsettings && make
 	cd ./$(PLATFORM) && make early # eg. other libs
 	cd ./$(PLATFORM)/keymon && make
-	cd ./all/oneos/ && make
+	cd ./all/unuui/ && make
 	cd ./all/minarch/ && make
 	cd ./all/clock/ && make
 	cd ./all/minput/ && make
@@ -30,7 +30,7 @@ all:
 clean:
 	cd ./$(PLATFORM)/libmsettings && make clean
 	cd ./$(PLATFORM)/keymon && make clean
-	cd ./all/oneos/ && make clean
+	cd ./all/unuui/ && make clean
 	cd ./all/minarch/ && make clean
 	cd ./all/clock/ && make clean
 	cd ./all/minput/ && make clean

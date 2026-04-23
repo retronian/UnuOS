@@ -19,7 +19,7 @@ SDL?=SDL
 
 ###########################################################
 
-TARGET = oneos
+TARGET = unuui
 INCDIR = -I. -I../common/ -I../../$(PLATFORM)/platform/
 SOURCE = $(TARGET).c ../common/scaler.c ../common/utils.c ../common/api.c ../common/lang.c ../../$(PLATFORM)/platform/platform.c
 

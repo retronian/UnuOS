@@ -18,14 +18,14 @@
 #define USERDATA_PATH SDCARD_PATH "/.userdata/" PLATFORM
 #define SHARED_USERDATA_PATH SDCARD_PATH "/.userdata/shared"
 #define PAKS_PATH SYSTEM_PATH "/paks"
-#define RECENT_PATH SHARED_USERDATA_PATH "/.oneos/recent.txt"
+#define RECENT_PATH SHARED_USERDATA_PATH "/.unuui/recent.txt"
 #define SIMPLE_MODE_PATH SHARED_USERDATA_PATH "/enable-simple-mode"
-#define AUTO_RESUME_PATH SHARED_USERDATA_PATH "/.oneos/auto_resume.txt"
+#define AUTO_RESUME_PATH SHARED_USERDATA_PATH "/.unuui/auto_resume.txt"
 #define AUTO_RESUME_SLOT 9
 
 #define FAUX_RECENT_PATH SDCARD_PATH "/Recently Played"
 #define COLLECTIONS_PATH SDCARD_PATH "/Collections"
-#define SETTINGS_PATH    SDCARD_PATH "/.oneos-settings" // virtual, never on disk
+#define SETTINGS_PATH    SDCARD_PATH "/.unuui-settings" // virtual, never on disk
 
 #define LAST_PATH "/tmp/last.txt" // transient
 #define CHANGE_DISC_PATH "/tmp/change_disc.txt"

@@ -1,5 +1,5 @@
 #!/bin/sh
-# OneOS.pak
+# UnuUI.pak
 
 #######################################
 
@@ -20,7 +20,7 @@ mkdir -p "$ROMS_PATH"
 mkdir -p "$SAVES_PATH"
 mkdir -p "$USERDATA_PATH"
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.oneos"
+mkdir -p "$SHARED_USERDATA_PATH/.unuui"
 
 export TRIMUI_MODEL=`strings /usr/trimui/bin/MainUI | grep ^Trimui`
 if [ "$TRIMUI_MODEL" = "Trimui Brick" ]; then
@@ -99,11 +99,11 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH="/tmp/oneos_exec"
+EXEC_PATH="/tmp/unuui_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH"  && sync
 while [ -f $EXEC_PATH ]; do
-	oneos.elf &> $LOGS_PATH/oneos.txt
+	unuui.elf &> $LOGS_PATH/unuui.txt
 	[ -f $EXEC_PATH ] && echo $CPU_SPEED_PERF > $CPU_PATH
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync

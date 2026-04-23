@@ -43,7 +43,7 @@ index 5e74450..687d633 100644
   ********************************
   *
 + * - 2.1: Partial Japanese translation for user-facing options
-+ *        (relies on OneOS merge-aware SET_CORE_OPTIONS_INTL handler
++ *        (relies on UnuUI merge-aware SET_CORE_OPTIONS_INTL handler
 + *         to fall back to English for missing keys/values)
   * - 2.0: Add support for core options v2 interface
   * - 1.3: Move translations to libretro_core_options_intl.h
@@ -85,7 +85,7 @@ index 5e74450..687d633 100644
 +};
 +
 +/* Shared value arrays for common enums.
-+ * OneOS merge logic only reads the labels; values must match us keys. */
++ * UnuUI merge logic only reads the labels; values must match us keys. */
 +#define VALS_DISABLED_ENABLED \
 +   { { "disabled", "無効" }, { "enabled", "有効" }, { NULL, NULL } }
 +#define VALS_AUTO_DISABLED_ENABLED \

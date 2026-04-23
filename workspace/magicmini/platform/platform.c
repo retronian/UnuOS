@@ -747,7 +747,7 @@ void PLAT_enableBacklight(int enable) {
 }
 
 void PLAT_powerOff(void) {
-	system("rm -f /tmp/oneos_exec && sync");
+	system("rm -f /tmp/unuui_exec && sync");
 	sleep(2);
 
 	SetRawVolume(MUTE_VOLUME_RAW);

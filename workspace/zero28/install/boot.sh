@@ -3,7 +3,7 @@
 
 PLATFORM="zero28"
 SDCARD_PATH="/mnt/SDCARD"
-UPDATE_PATH="$SDCARD_PATH/OneOS.zip"
+UPDATE_PATH="$SDCARD_PATH/UnuUI.zip"
 SYSTEM_PATH="$SDCARD_PATH/.system"
 
 CPU_PATH=/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
@@ -29,7 +29,7 @@ if [ -f "$UPDATE_PATH" ]; then
 fi
 
 # or launch (and keep launched)
-LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/OneOS.pak/launch.sh"
+LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/UnuUI.pak/launch.sh"
 while [ -f "$LAUNCH_PATH" ] ; do
 	"$LAUNCH_PATH"
 done

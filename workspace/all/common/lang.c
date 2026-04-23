@@ -1,4 +1,4 @@
-// OneOS - simple UI string localization
+// UnuUI - simple UI string localization
 //
 // Switch language by writing one of:
 //   en, ja, zh_cn, zh_tw, ko

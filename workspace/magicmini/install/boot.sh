@@ -4,7 +4,7 @@
 
 SDCARD_PATH=/storage/TF2
 SYSTEM_FRAG=/.system/magicmini
-UPDATE_FRAG=/OneOS.zip
+UPDATE_FRAG=/UnuUI.zip
 SYSTEM_PATH=${SDCARD_PATH}${SYSTEM_FRAG}
 UPDATE_PATH=${SDCARD_PATH}${UPDATE_FRAG}
 
@@ -33,7 +33,7 @@ if [ -f $UPDATE_PATH ]; then
 	fi
 fi
 
-LAUNCH_PATH=$SYSTEM_PATH/paks/OneOS.pak/launch.sh
+LAUNCH_PATH=$SYSTEM_PATH/paks/UnuUI.pak/launch.sh
 if [ -f $LAUNCH_PATH ]; then
 	$LAUNCH_PATH
 fi

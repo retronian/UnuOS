@@ -124,7 +124,7 @@
 
 ///////////////////////////////
 
-#define SDCARD_PATH "/home/komagata/Works/retronian/OneOS/workspace/linux/FAKESD"
+#define SDCARD_PATH "/home/komagata/Works/retronian/UnuUI/workspace/linux/FAKESD"
 #define MUTE_VOLUME_RAW 63 // 0 unintuitively is 100% volume
 
 ///////////////////////////////

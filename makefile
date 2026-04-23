@@ -1,4 +1,4 @@
-# OneOS (MinUI fork)
+# UnuUI (MinUI fork)
 
 # NOTE: this runs on the host system (eg. macOS) not in a docker image
 # it has to, otherwise we'd be running a docker in a docker and oof
@@ -19,7 +19,7 @@ endif
 BUILD_HASH:=$(shell git rev-parse --short HEAD)
 RELEASE_TIME:=$(shell TZ=GMT date +%Y%m%d)
 RELEASE_BETA=
-RELEASE_BASE=OneOS-$(RELEASE_TIME)$(RELEASE_BETA)
+RELEASE_BASE=UnuUI-$(RELEASE_TIME)$(RELEASE_BETA)
 RELEASE_DOT:=$(shell find ./releases/. -regextype posix-extended -regex ".*/${RELEASE_BASE}-[0-9]+\.zip" | wc -l | sed 's/ //g')
 RELEASE_NAME=$(RELEASE_BASE)-$(RELEASE_DOT)
 
@@ -48,14 +48,14 @@ system:
 	# populate system
 	cp ./workspace/$(PLATFORM)/keymon/keymon.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/$(PLATFORM)/libmsettings/libmsettings.so ./build/SYSTEM/$(PLATFORM)/lib
-	cp ./workspace/all/oneos/build/$(PLATFORM)/oneos.elf ./build/SYSTEM/$(PLATFORM)/bin/
+	cp ./workspace/all/unuui/build/$(PLATFORM)/unuui.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/minarch/build/$(PLATFORM)/minarch.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/syncsettings/build/$(PLATFORM)/syncsettings.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/say/build/$(PLATFORM)/say.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/clock/build/$(PLATFORM)/clock.elf ./build/BASE/Tools/$(PLATFORM)/Clock.pak/
 	cp ./workspace/all/minput/build/$(PLATFORM)/minput.elf ./build/BASE/Tools/$(PLATFORM)/Input.pak/
 
-cores: # OneOS: 7 bundled cores (no Extras concept)
+cores: # UnuUI: 7 bundled cores (no Extras concept)
 	cp ./workspace/$(PLATFORM)/cores/output/fceumm_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
 	cp ./workspace/$(PLATFORM)/cores/output/gambatte_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
 	cp ./workspace/$(PLATFORM)/cores/output/gpsp_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
@@ -122,7 +122,7 @@ endif
 
 package: tidy
 	# ----------------------------------------------------
-	# zip up build (single OneOS package — no extras)
+	# zip up build (single UnuUI package — no extras)
 
 	# move formatted readme from workspace to build
 	cp ./workspace/readmes/BASE-out.txt ./build/BASE/README.txt
@@ -135,11 +135,11 @@ package: tidy
 	mv ./build/SYSTEM ./build/PAYLOAD/.system
 	cp -R ./build/BOOT/.tmp_update ./build/PAYLOAD/
 
-	cd ./build/PAYLOAD && zip -r OneOS.zip .system .tmp_update
-	mv ./build/PAYLOAD/OneOS.zip ./build/BASE
+	cd ./build/PAYLOAD && zip -r UnuUI.zip .system .tmp_update
+	mv ./build/PAYLOAD/UnuUI.zip ./build/BASE
 
 	# single zip (Tools now lives under BASE)
-	cd ./build/BASE && zip -r ../../releases/$(RELEASE_NAME).zip Bios Roms Saves Tools miyoo miyoo354 trimui rg35xx rg35xxplus gkdpixel miyoo355 magicx miyoo285 em_ui.sh OneOS.zip README.txt
+	cd ./build/BASE && zip -r ../../releases/$(RELEASE_NAME).zip Bios Roms Saves Tools miyoo miyoo354 trimui rg35xx rg35xxplus gkdpixel miyoo355 magicx miyoo285 em_ui.sh UnuUI.zip README.txt
 	echo "$(RELEASE_NAME)" > ./build/latest.txt
 	
 ###########################################################

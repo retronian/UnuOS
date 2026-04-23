@@ -1,5 +1,5 @@
 #!/bin/sh
-# OneOS.pak
+# UnuUI.pak
 
 if [ -z "$LCD_INIT" ]; then
 	# an update may have already initilized the LCD
@@ -44,7 +44,7 @@ export DATETIME_PATH="$SHARED_USERDATA_PATH/datetime.txt" # used by bin/shutdown
 
 mkdir -p "$USERDATA_PATH"
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.oneos"
+mkdir -p "$SHARED_USERDATA_PATH/.unuui"
 
 #######################################
 
@@ -122,12 +122,12 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH=/tmp/oneos_exec
+EXEC_PATH=/tmp/unuui_exec
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH"  && sync
 while [ -f "$EXEC_PATH" ]; do
 	overclock.elf $CPU_SPEED_PERF
-	oneos.elf &> $LOGS_PATH/oneos.txt
+	unuui.elf &> $LOGS_PATH/unuui.txt
 	
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync

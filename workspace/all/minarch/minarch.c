@@ -607,7 +607,7 @@ typedef struct Option {
 	char** values;
 	char** labels;
 	// v2 core options only: category_key references a category defined in
-	// the core's category array. OneOS stores the category display name
+	// the core's category array. UnuUI stores the category display name
 	// (translated if available) for grouped rendering.
 	char* category_key;
 	char* category_name;
@@ -2414,7 +2414,7 @@ static bool environment_callback(unsigned cmd, void *data) { // copied from pico
 	}
 	// RETRO_ENVIRONMENT_SET_MEMORY_MAPS (36 | RETRO_ENVIRONMENT_EXPERIMENTAL)
 	case RETRO_ENVIRONMENT_GET_LANGUAGE: { /* 39 */
-		// report OneOS lang to the core so it can return localized option strings
+		// report UnuUI lang to the core so it can return localized option strings
 		unsigned* out = (unsigned*)data;
 		if (out) *out = (unsigned)lang.retro_lang;
 		break;
@@ -3471,7 +3471,7 @@ static struct {
 	SDL_Surface* overlay;
 	char* items[MENU_ITEM_COUNT];
 	char* disc_paths[9]; // up to 9 paths, Arc the Lad Collection is 7 discs
-	char oneos_dir[256];
+	char unuui_dir[256];
 	char slot_path[256];
 	char base_path[256];
 	char bmp_path[256];
@@ -3515,10 +3515,10 @@ void Menu_init(void) {
 
 	char emu_name[256];
 	getEmuName(game.path, emu_name);
-	sprintf(menu.oneos_dir, SHARED_USERDATA_PATH "/.oneos/%s", emu_name);
-	mkdir(menu.oneos_dir, 0755);
+	sprintf(menu.unuui_dir, SHARED_USERDATA_PATH "/.unuui/%s", emu_name);
+	mkdir(menu.unuui_dir, 0755);
 
-	sprintf(menu.slot_path, "%s/%s.txt", menu.oneos_dir, game.name);
+	sprintf(menu.slot_path, "%s/%s.txt", menu.unuui_dir, game.name);
 
 	if (simple_mode) menu.items[ITEM_OPTS] = (char*)lang.reset;
 	
@@ -4089,7 +4089,7 @@ static int OptionQuicksave_onConfirm(MenuList* list, int i) {
 MenuList options_menu = {
 	.type = MENU_LIST,
 	.items = (MenuItem[]) {
-		{"Frontend", "OneOS (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
+		{"Frontend", "UnuUI (" BUILD_DATE " " BUILD_HASH ")",.on_confirm=OptionFrontend_openMenu},
 		{"Emulator",.on_confirm=OptionEmulator_openMenu},
 		{"Controls",.on_confirm=OptionControls_openMenu},
 		{"Shortcuts",.on_confirm=OptionShortcuts_openMenu},
@@ -4675,8 +4675,8 @@ static void Menu_updateState(void) {
 
 	state_slot = last_slot;
 
-	sprintf(menu.bmp_path, "%s/%s.%d.bmp", menu.oneos_dir, game.name, menu.slot);
-	sprintf(menu.txt_path, "%s/%s.%d.txt", menu.oneos_dir, game.name, menu.slot);
+	sprintf(menu.bmp_path, "%s/%s.%d.bmp", menu.unuui_dir, game.name, menu.slot);
+	sprintf(menu.txt_path, "%s/%s.%d.txt", menu.unuui_dir, game.name, menu.slot);
 	
 	menu.save_exists = exists(save_path);
 	menu.preview_exists = menu.save_exists && exists(menu.bmp_path);

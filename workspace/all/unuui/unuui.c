@@ -776,7 +776,7 @@ static Array* getRoot(void) {
 	char* tools_path = SDCARD_PATH "/Tools/" PLATFORM;
 	if (exists(tools_path) && !simple_mode) Array_push(root, Entry_new(tools_path, ENTRY_DIR));
 
-	// OneOS settings entry (virtual — opens an in-minui settings menu)
+	// UnuUI settings entry (virtual — opens an in-minui settings menu)
 	Array_push(root, Entry_new(SETTINGS_PATH, ENTRY_DIR));
 
 	return root;
@@ -1049,7 +1049,7 @@ static void readyResumePath(char* rom_path, int type) {
 	tmp = strrchr(path, '/') + 1;
 	strcpy(rom_file, tmp);
 	
-	sprintf(slot_path, "%s/.oneos/%s/%s.txt", SHARED_USERDATA_PATH, emu_name, rom_file); // /.userdata/.oneos/<EMU>/<romname>.ext.txt
+	sprintf(slot_path, "%s/.unuui/%s/%s.txt", SHARED_USERDATA_PATH, emu_name, rom_file); // /.userdata/.unuui/<EMU>/<romname>.ext.txt
 	
 	can_resume = exists(slot_path);
 }
@@ -1136,7 +1136,7 @@ static void openRom(char* path, char* last) {
 			
 			// get disc for state
 			char disc_path_path[256];
-			sprintf(disc_path_path, "%s/.oneos/%s/%s.%s.txt", SHARED_USERDATA_PATH, emu_name, rom_file, slot); // /.userdata/arm-480/.oneos/<EMU>/<romname>.ext.0.txt
+			sprintf(disc_path_path, "%s/.unuui/%s/%s.%s.txt", SHARED_USERDATA_PATH, emu_name, rom_file, slot); // /.userdata/arm-480/.unuui/<EMU>/<romname>.ext.0.txt
 
 			if (exists(disc_path_path)) {
 				// switch to disc path
@@ -1165,7 +1165,7 @@ static void openRom(char* path, char* last) {
 	sprintf(cmd, "'%s' '%s'", escapeSingleQuotes(emu_path), escapeSingleQuotes(sd_path));
 	queueNext(cmd);
 }
-// OneOS settings screen (launcher-side, no game required).
+// UnuUI settings screen (launcher-side, no game required).
 // For now, presents a single option: language selection.
 static const char* settings_lang_codes[] = {
 	"en", "ja", "zh_cn", "zh_tw", "ko", "es", "fr",
@@ -1343,7 +1343,7 @@ static void closeDirectory(void) {
 }
 
 static void Entry_open(Entry* self, SDL_Surface* screen) {
-	// OneOS virtual settings entry: intercept before directory handling
+	// UnuUI virtual settings entry: intercept before directory handling
 	if (exactMatch(self->path, SETTINGS_PATH)) {
 		openSettings(screen);
 		return;
@@ -1464,15 +1464,25 @@ static void Menu_quit(void) {
 ///////////////////////////////////////
 
 int main (int argc, char *argv[]) {
+	// one-time migration from legacy .oneos userdata dir
+	{
+		char legacy[MAX_PATH], modern[MAX_PATH];
+		snprintf(legacy, sizeof(legacy), "%s/.oneos", SHARED_USERDATA_PATH);
+		snprintf(modern, sizeof(modern), "%s/.unuui", SHARED_USERDATA_PATH);
+		if (exists(legacy) && !exists(modern)) {
+			rename(legacy, modern);
+		}
+	}
+
 	// LOG_info("time from launch to:\n");
 	// unsigned long main_begin = SDL_GetTicks();
 	// unsigned long first_draw = 0;
-	
+
 	if (autoResume()) return 0; // nothing to do
 	
 	simple_mode = exists(SIMPLE_MODE_PATH);
 
-	LOG_info("OneOS\n");
+	LOG_info("UnuUI\n");
 	InitSettings();
 	
 	SDL_Surface* screen = GFX_init(MODE_MAIN);

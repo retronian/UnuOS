@@ -7,7 +7,7 @@ FAKESD="$(pwd)/FAKESD"
 
 mkdir -p "$FAKESD"/.system/linux/{bin,cores,dat,lib,paks,res}
 mkdir -p "$FAKESD"/.userdata/linux
-mkdir -p "$FAKESD"/.userdata/shared/.oneos
+mkdir -p "$FAKESD"/.userdata/shared/.unuui
 mkdir -p "$FAKESD"/Roms
 mkdir -p "$FAKESD"/Saves
 mkdir -p "$FAKESD"/Bios

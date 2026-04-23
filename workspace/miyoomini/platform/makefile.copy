@@ -14,7 +14,7 @@ $(PLATFORM):
 	cp ./workspace/$@/install/boot.sh ./build/BOOT/common/$@.sh
 	cp ./workspace/$@/install/*.png ./build/BOOT/common/$@/
 	cp ./workspace/$@/show/show.elf ./build/BOOT/common/$@/
-	# tools (under BASE in OneOS — no Extras)
+	# tools (under BASE in UnuUI — no Extras)
 	cp ./workspace/$@/other/DinguxCommander/output/DinguxCommander ./build/BASE/Tools/$@/Files.pak/
 	cp -r ./workspace/$@/other/DinguxCommander/res ./build/BASE/Tools/$@/Files.pak/
 	cp -r ./workspace/$@/other/logotweak/output/*.elf ./build/BASE/Tools/$@/Bootlogo.pak/
