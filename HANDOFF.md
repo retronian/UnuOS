@@ -115,13 +115,13 @@ cd workspace/linux
   - **NextUI 等他のフォークでは未修正**、UnuUI 独自の差別化ポイント
 - 実機で日本語 ROM 名表示を確認済み
 
-### ✅ Phase 2: UnuUI ブランディング
-- `MinUI` → `UnuUI` リネーム（makefile RELEASE_BASE / minarch Frontend label / minui ログ / README）
+### ✅ Phase 2: OneOS ブランディング（後に UnuUI に改名、Phase 5 参照）
+- `MinUI` → `OneOS` リネーム（makefile RELEASE_BASE / minarch Frontend label / minui ログ / README）
 - `skeleton/SYSTEM/res/charging-640-480.png` を One/OS 正方形ロゴに置換（ImageMagick）
-- `workspace/miyoomini/install/installing.png` / `updating.png` も UnuUI 化
+- `workspace/miyoomini/install/installing.png` / `updating.png` も OneOS 化
 - tag `minui-fork-point` を dbf8943 に打った
 - `CHANGELOG.md` 開始
-- **注意**: 他プラットフォーム (rg35xx, trimui, etc.) のコードは残す方針。UnuUI は Miyoo Mini Plus 専用だが将来のマルチプラットフォーム展開余地は保つ。
+- **注意**: 他プラットフォーム (rg35xx, trimui, etc.) のコードは残す方針。OneOS は Miyoo Mini Plus 専用だが将来のマルチプラットフォーム展開余地は保つ。
 - **重要**: `RECENT_PATH` の `.minui/` と `MinUI.zip` ファイル名は互換性のため維持（既存ユーザの data を壊さない）。
 
 ### ✅ Phase 4a: UI 多言語化（7言語）
@@ -169,6 +169,13 @@ cd workspace/linux
 - `workspace/miyoomini/platform/makefile.copy` を `build/BASE/Tools/` に更新
 - 結果: **UnuUI パッケージは `releases/UnuUI-YYYYMMDD-N-base.zip` 1 個のみ** (extras.zip は生成されない)
 
+### ✅ Phase 5 (2026-04-23): OneOS → UnuUI 改名
+- プロジェクト名を **OneOS** から **UnuUI** に変更（エスペラント語「一」= Unu + MinUI 系譜の UI サフィックス）
+- 動機: OneOS は同名プロジェクト多数（DependableSystemsLab/OneOS 等）、ブランド弱く検索で埋もれる。多言語中立・シンプル・ミニマルの方針で UnuUI を選定
+- 変更: `workspace/all/oneos/` → `workspace/all/unuui/`、`OneOS.pak` → `UnuUI.pak` (8 プラットフォーム)、`RELEASE_BASE=OneOS-` → `UnuUI-`、スクリプト・ドキュメント一式
+- 後方互換: 旧 `<SHARED_USERDATA>/.oneos/` は起動時 `.unuui/` に自動 rename（`workspace/all/unuui/unuui.c:main()` 内）
+- **重要**: `RECENT_PATH` の `.minui/` と `MinUI.zip` ファイル名はそのまま（既存ユーザの data を壊さない方針は継続）
+
 ## 同梱 core の最終ラインナップ
 
 | Core | エミュ対象 | 翻訳（コアオプション） |
@@ -211,7 +218,7 @@ d92f478 cores: add picodrive ja translation + fix GIT_REVISION glob
 bbded10 cores: add snes9x2005_plus and gpsp translation patches
 991d400 phase 4b: additional localization + Settings UI + libretro i18n + restructure
 7b5b5da phase 4a: UI localization (7 languages)
-26d6da5 phase 2: rebrand to UnuUI + linux dev simulator
+26d6da5 phase 2: rebrand to OneOS + linux dev simulator
 94fecb6 miyoomini: added Japanese/CJK font support
 minui-fork-point (tag) → dbf8943 (upstream MinUI の最終状態)
 ```

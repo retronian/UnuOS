@@ -1464,6 +1464,12 @@ static void Menu_quit(void) {
 ///////////////////////////////////////
 
 int main (int argc, char *argv[]) {
+	// LOG_info("time from launch to:\n");
+	// unsigned long main_begin = SDL_GetTicks();
+	// unsigned long first_draw = 0;
+
+	if (autoResume()) return 0; // nothing to do
+
 	// one-time migration from legacy .oneos userdata dir
 	{
 		char legacy[MAX_PATH], modern[MAX_PATH];
@@ -1473,12 +1479,6 @@ int main (int argc, char *argv[]) {
 			rename(legacy, modern);
 		}
 	}
-
-	// LOG_info("time from launch to:\n");
-	// unsigned long main_begin = SDL_GetTicks();
-	// unsigned long first_draw = 0;
-
-	if (autoResume()) return 0; // nothing to do
 	
 	simple_mode = exists(SIMPLE_MODE_PATH);
 
