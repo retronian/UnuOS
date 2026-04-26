@@ -33,10 +33,10 @@ Japanese UI:
 - Simple launcher, simple SD card layout
 - No configuration
 - Multi-byte ROM file names display correctly
-- Multi-language UI, including CJK
-- Cover art for ROMs and folders
-- Collections (custom ROM groupings across consoles)
-- In-app screenshot (SELECT+START)
+- [Multi-language UI](https://github.com/retronian/UnuOS/wiki/Localization), including CJK
+- [Cover art](https://github.com/retronian/UnuOS/wiki/Box-Art) for ROMs and folders
+- [Collections](https://github.com/retronian/UnuOS/wiki/Collections) (custom ROM groupings across consoles)
+- [In-app screenshot](https://github.com/retronian/UnuOS/wiki/Screenshots) (SELECT+START)
 - Auto sleep after 30 seconds; hold POWER to sleep / wake
 - Resumes from the previous running state on power on
 
