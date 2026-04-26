@@ -1,39 +1,39 @@
 # Screenshots
 
-UnuOSはランチャーやゲーム中の画面をBMP画像として保存できます。
+UnuOS can save the current launcher or gameplay screen as a BMP image.
 
-## 操作方法
+## Controls
 
-`SELECT` を押しながら `START` を押すと、現在の画面がスクリーンショットとして保存されます。
+Hold `SELECT` and press `START` to save a screenshot of the current screen.
 
-この操作は次の画面で使えます。
+This works from:
 
-- ランチャー
-- Settings画面
-- ゲーム中
-- minarchのメニューやステート画面
+- The launcher
+- Settings
+- Gameplay
+- minarch menus and save state screens
 
-## 保存場所
+## Save Location
 
-スクリーンショットはSDカード直下の `Screenshots` フォルダに保存されます。フォルダが存在しない場合は自動で作成されます。
+Screenshots are saved in the `Screenshots` folder at the root of the SD card. The folder is created automatically if it does not exist.
 
 ```text
 /Screenshots/YYYY-MM-DD_HH-MM-SS.bmp
 ```
 
-例:
+Example:
 
 ```text
 /Screenshots/2026-04-27_02-15-30.bmp
 ```
 
-## 形式
+## Format
 
-- ファイル形式はBMPです。
-- 保存される内容は、その時点でUnuOSが表示している画面です。
-- 連続して撮影する場合、ファイル名は撮影時刻で分かれます。
+- Files are saved as BMP.
+- The saved image is whatever UnuOS is currently displaying.
+- Filenames are based on the capture timestamp.
 
-## 注意点
+## Notes
 
-- SDカードに書き込みできない状態では保存できません。
-- 同じ秒に複数回撮影すると、同じファイル名になる可能性があります。
+- Screenshots cannot be saved if the SD card is not writable.
+- Taking multiple screenshots within the same second can reuse the same filename.

@@ -1,28 +1,28 @@
 # Localization
 
-UnuOSは、ランチャー、Settings、Tools表示名、libretroコアオプションの多言語表示に対応しています。
+UnuOS supports localized text for the launcher, Settings, Tools labels, and libretro core options.
 
-## 対応言語
+## Supported Languages
 
 - English
-- 日本語
-- 简体中文
-- 繁體中文
-- 한국어
-- Español
-- Français
+- Japanese
+- Simplified Chinese
+- Traditional Chinese
+- Korean
+- Spanish
+- French
 
-## 言語の変更
+## Changing Language
 
-ランチャーのSettingsから言語を選択します。選択するとすぐに表示へ反映されます。
+Choose the language from Settings in the launcher. The selected language is applied immediately.
 
-設定値はSDカード上の共有ユーザーデータに保存されます。
+The setting is saved in shared user data on the SD card.
 
 ```text
 /.userdata/shared/lang.txt
 ```
 
-ファイルには言語コードが1行で保存されます。
+The file contains one language code.
 
 ```text
 en
@@ -34,24 +34,24 @@ es
 fr
 ```
 
-`lang.txt` が存在しない場合や未対応の値の場合、英語表示になります。
+If `lang.txt` does not exist, or if it contains an unsupported value, UnuOS uses English.
 
-## 表示対象
+## Localized Areas
 
-多言語化の対象は主に次の項目です。
+Localization covers:
 
-- ランチャーの基本UI
-- Settingsの言語選択
-- Toolsメニュー内の標準ツール名
-- minarchのメニュー項目
-- libretroコアオプション
+- Main launcher UI
+- Settings language selection
+- Built-in Tools menu labels
+- minarch menu items
+- libretro core options
 
-## CJK表示
+## CJK Text
 
-UnuOSはNoto Sans CJKフォントを同梱しており、日本語、中国語、韓国語のROM名やUI文字列を表示できます。ROM名の省略処理もUTF-8の文字境界に合わせて行います。
+UnuOS bundles Noto Sans CJK fonts so Japanese, Chinese, and Korean ROM names and UI strings render correctly. ROM name truncation is also UTF-8 safe and avoids cutting multi-byte characters in the middle.
 
-## 注意点
+## Notes
 
-- ユーザーが追加したROM名やコレクション名はUTF-8で保存してください。
-- コアオプションの翻訳は、各libretroコアが持つ翻訳テーブルとUnuOS側の対応状況に依存します。
-- Toolsの外部パッケージ名は、UnuOS側に翻訳がある標準ツールのみローカライズされます。
+- User-created ROM names and collection names should be saved as UTF-8.
+- Core option translations depend on each libretro core's translation tables and UnuOS integration.
+- External Tools packages are shown as-is unless UnuOS has a built-in localized label for that tool.

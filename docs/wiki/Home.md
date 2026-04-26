@@ -1,13 +1,13 @@
 # UnuOS Wiki
 
-UnuOSの機能説明とSDカード上の設定方法をまとめています。
+Feature documentation and SD card setup notes for UnuOS.
 
-## MinUI由来の機能
+## Features Inherited From MinUI
 
 - [Box Art](Box-Art)
 - [Collections](Collections)
 
-## UnuOSで追加された機能
+## Features Added In UnuOS
 
 - [Screenshots](Screenshots)
 - [Localization](Localization)

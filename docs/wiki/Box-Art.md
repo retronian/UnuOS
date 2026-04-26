@@ -1,45 +1,45 @@
 # Box Art
 
-UnuOSは、ROMやフォルダに対応するPNG画像をSDカード上に置くと、ランチャーで項目を選択したときに右側へ表示します。
+UnuOS can show a PNG image for a ROM, folder, or collection when that item is selected in the launcher.
 
-この機能はMinUI由来の未文書化機能をUnuOSでも利用できるようにしているものです。
+This is an undocumented MinUI feature that UnuOS keeps available.
 
-## 配置場所
+## File Location
 
-画像は対象ファイルまたは対象フォルダと同じ階層にある `.res` フォルダへ置きます。ファイル名は対象の名前に `.png` を付けたものです。
+Put images in a `.res` folder next to the file or folder they belong to. The image filename is the target name with `.png` appended.
 
-例:
+Example:
 
 ```text
 /Roms/GBA/Metroid Fusion.gba
 /Roms/GBA/.res/Metroid Fusion.gba.png
 ```
 
-フォルダにも画像を付けられます。メインの機種一覧で表示したい場合は、`Roms` フォルダ直下の `.res` に置きます。
+Folders can have images too. To show an image in the main system list, put it in `.res` directly under `Roms`.
 
-例:
+Example:
 
 ```text
 /Roms/GBA
 /Roms/.res/GBA.png
 ```
 
-Collectionsにも画像を付けられます。
+Collections can also have images.
 
 ```text
 /Collections/Metroid series.txt
 /Collections/.res/Metroid series.txt.png
 ```
 
-## 画像形式
+## Image Format
 
-- PNG形式を使用します。
-- 透過PNGを使用できます。
-- 画面右側へ等倍で表示されます。
-- 推奨サイズは最大240x240です。端末の画面サイズより大きい画像は避けてください。
+- Use PNG files.
+- Transparent PNGs are supported.
+- Images are drawn at their original size on the right side of the screen.
+- Recommended maximum size is 240x240. Avoid images larger than the device screen.
 
-## 注意点
+## Notes
 
-- ROM名と画像名は拡張子を含めて一致させます。
-- 大文字小文字や空白もファイル名として一致している必要があります。
-- `.zip` や `.chd` などでも、対象ファイル名にそのまま `.png` を付けます。
+- The image name must match the ROM name, including the extension.
+- Case, spaces, and punctuation must match the target filename.
+- For `.zip`, `.chd`, and other formats, append `.png` to the full target filename.
