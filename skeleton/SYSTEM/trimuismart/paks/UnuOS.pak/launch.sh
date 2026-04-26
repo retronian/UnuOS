@@ -1,5 +1,5 @@
 #!/bin/sh
-# OneOS.pak
+# UnuOS.pak
 
 # recover from readonly SD card -------------------------------
 touch /mnt/writetest
@@ -26,7 +26,7 @@ export DATETIME_PATH="$SHARED_USERDATA_PATH/datetime.txt"
 
 mkdir -p "$USERDATA_PATH"
 mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.oneos"
+mkdir -p "$SHARED_USERDATA_PATH/.unuos"
 
 #######################################
 
@@ -71,11 +71,11 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH="/tmp/oneos_exec"
+EXEC_PATH="/tmp/unuos_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH"  && sync
 while [ -f $EXEC_PATH ]; do
-	oneos.elf &> $LOGS_PATH/oneos.txt
+	unuos.elf &> $LOGS_PATH/unuos.txt
 	echo $CPU_SPEED_PERF > $CPU_PATH
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync

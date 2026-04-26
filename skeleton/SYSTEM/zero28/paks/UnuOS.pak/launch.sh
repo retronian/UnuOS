@@ -1,10 +1,12 @@
 #!/bin/sh
+# UnuOS.pak
 
-# dmesg > /storage/TF1/dmesg.txt
+#######################################
 
-export PLATFORM="magicmini"
-export SDCARD_PATH="/storage/TF2"
+export PLATFORM="zero28"
+export SDCARD_PATH="/mnt/SDCARD"
 export BIOS_PATH="$SDCARD_PATH/Bios"
+export ROMS_PATH="$SDCARD_PATH/Roms"
 export SAVES_PATH="$SDCARD_PATH/Saves"
 export SYSTEM_PATH="$SDCARD_PATH/.system/$PLATFORM"
 export CORES_PATH="$SYSTEM_PATH/cores"
@@ -13,53 +15,56 @@ export SHARED_USERDATA_PATH="$SDCARD_PATH/.userdata/shared"
 export LOGS_PATH="$USERDATA_PATH/logs"
 export DATETIME_PATH="$SHARED_USERDATA_PATH/datetime.txt"
 
-export PATH=$SYSTEM_PATH/bin:$PATH
-export LD_LIBRARY_PATH=$SYSTEM_PATH/lib:$LD_LIBRARY_PATH
-
-export SDL_AUDIODRIVER=alsa
-amixer cset name='Playback Path' SPK # or HP, seems to switch automatically
-
-cat /dev/zero > /dev/fb0
-
-export CPU_PATH=/sys/devices/system/cpu/cpufreq/policy0/scaling_setspeed
-export CPU_SPEED_PERF=1608000
-echo performance > /sys/devices/platform/ff400000.gpu/devfreq/ff400000.gpu/governor
-echo performance > /sys/devices/platform/dmc/devfreq/dmc/governor
-echo userspace > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo $CPU_SPEED_PERF > $CPU_PATH
+mkdir -p "$BIOS_PATH"
+mkdir -p "$ROMS_PATH"
+mkdir -p "$SAVES_PATH"
+mkdir -p "$USERDATA_PATH"
+mkdir -p "$LOGS_PATH"
+mkdir -p "$SHARED_USERDATA_PATH/.unuos"
 
 #######################################
+
+export LD_LIBRARY_PATH=$SYSTEM_PATH/lib:$LD_LIBRARY_PATH
+export PATH=$SYSTEM_PATH/bin:$PATH
+
+# corrects brightness control
+bl_disable && bl_enable
+
+echo userspace > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+CPU_PATH=/sys/devices/system/cpu/cpu0/cpufreq/scaling_setspeed
+CPU_SPEED_PERF=1800000
+echo $CPU_SPEED_PERF > $CPU_PATH
 
 keymon.elf & # &> $SDCARD_PATH/keymon.txt &
 
 #######################################
 
-mkdir -p "$LOGS_PATH"
-mkdir -p "$SHARED_USERDATA_PATH/.oneos"
 AUTO_PATH=$USERDATA_PATH/auto.sh
 if [ -f "$AUTO_PATH" ]; then
-	"$AUTO_PATH" # &> $LOGS_PATH/auto.txt
+	"$AUTO_PATH"
 fi
 
 cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH=/tmp/oneos_exec
+EXEC_PATH="/tmp/unuos_exec"
 NEXT_PATH="/tmp/next"
-touch "$EXEC_PATH" && sync
-while [ -f "$EXEC_PATH" ]; do
-	echo $CPU_SPEED_PERF > $CPU_PATH
-	oneos.elf &> $LOGS_PATH/oneos.txt
+touch "$EXEC_PATH"  && sync
+while [ -f $EXEC_PATH ]; do
+	unuos.elf &> $LOGS_PATH/unuos.txt
+	[ -f $EXEC_PATH ] && echo $CPU_SPEED_PERF > $CPU_PATH
 	echo `date +'%F %T'` > "$DATETIME_PATH"
 	sync
 	
 	if [ -f $NEXT_PATH ]; then
-		echo $CPU_SPEED_PERF > $CPU_PATH
 		CMD=`cat $NEXT_PATH`
 		eval $CMD
 		rm -f $NEXT_PATH
+		[ -f $EXEC_PATH ] && echo $CPU_SPEED_PERF > $CPU_PATH
 		echo `date +'%F %T'` > "$DATETIME_PATH"
 		sync
 	fi
 done
+
+poweroff # just in case

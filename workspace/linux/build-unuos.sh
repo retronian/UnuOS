@@ -1,23 +1,23 @@
 #!/bin/bash
-# Build OneOS for Linux dev simulator
+# Build UnuOS for Linux dev simulator
 set -e
 
 cd "$(dirname "$0")"
 ROOT="$(cd ../.. && pwd)"
 
-mkdir -p ../all/oneos/build/linux
+mkdir -p ../all/unuos/build/linux
 
 BUILD_DATE=$(date +%Y%m%d)
 BUILD_HASH=$(cd "$ROOT" && git rev-parse --short HEAD 2>/dev/null || echo dev)
 
 gcc \
-    ../all/oneos/oneos.c \
+    ../all/unuos/unuos.c \
     ../all/common/api.c \
     ../all/common/scaler.c \
     ../all/common/utils.c \
     ../all/common/lang.c \
     ./platform/platform.c \
-    -o ../all/oneos/build/linux/oneos \
+    -o ../all/unuos/build/linux/unuos \
     -I. \
     -I./platform \
     -I../all/common \
@@ -34,5 +34,5 @@ gcc \
     -Wno-format-truncation
 
 echo ""
-echo "Built: ../all/oneos/build/linux/oneos"
-echo "Run with: ./run-oneos.sh"
+echo "Built: ../all/unuos/build/linux/unuos"
+echo "Run with: ./run-unuos.sh"
