@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="docs/unuos-logo.png" alt="UnuOS" width="240">
-</p>
-
 # UnuOS
 
 > **Rename notice:** UnuOS was previously named OneOS. The name changed because
