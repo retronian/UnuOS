@@ -1,4 +1,4 @@
-# OneOS (MinUI Fork)
+# UnuOS (MinUI Fork)
 
 Miyoo Mini Plus向けレトロゲームランチャー。MinUIフォークにCJK日本語対応を追加する。
 
