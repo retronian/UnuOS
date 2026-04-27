@@ -76,12 +76,12 @@ $(REQUIRES_UNZIP60):
 	git clone --depth 1 https://github.com/shauninman/unzip60.git $(REQUIRES_UNZIP60)
 
 $(REQUIRES_SDL2):
-	git clone https://github.com/JohnnyonFlame/SDL-malifbdev-rot $(REQUIRES_SDL2)
+	git clone --depth 1 https://github.com/JohnnyonFlame/SDL-malifbdev-rot $(REQUIRES_SDL2)
 
 $(REQUIRES_DTC):
-	git clone https://github.com/dgibson/dtc $(REQUIRES_DTC)
+	git clone --depth 1 https://github.com/dgibson/dtc $(REQUIRES_DTC)
 
 $(REQUIRES_FBSET):
-	git clone https://github.com/shauninman/union-fbset $(REQUIRES_FBSET)
+	git clone --depth 1 https://github.com/shauninman/union-fbset $(REQUIRES_FBSET)
 
 include ../all/readmes/makefile

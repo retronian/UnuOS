@@ -572,11 +572,3 @@ FIXME: main makefile is a brittle mess
 5. which builds unique platform elfs
 
 there's more to this now (eg. PLATFORM/makefile.copy)
-
----
-
-replace 
-	git clone repo && cd repo && git checkout branch 
-with
-	git clone --depth 1 --branch branch repo
-note: doesn't work with commits only branches
