@@ -492,8 +492,6 @@ known issues
 	rgb30: light crackling in some cores (eg. fceumm and snes9x2005_plus)
 
 all
-	minarch
-		show a message when MENU+button binding clears a conflicting shortcut/control
 	simple progress animation for installing/updating
 		launch as a daemon with &
 		draws in a corner
