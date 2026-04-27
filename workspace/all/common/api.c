@@ -695,6 +695,8 @@ void GFX_blitButton(char* hint, char*button, SDL_Surface* dst, SDL_Rect* dst_rec
 }
 void GFX_blitMessage(TTF_Font* font, char* msg, SDL_Surface* dst, SDL_Rect* dst_rect) {
 	if (!dst_rect) dst_rect = &(SDL_Rect){0,0,dst->w,dst->h};
+	if (dst_rect->w==0) dst_rect->w = FIXED_WIDTH;
+	if (dst_rect->h==0) dst_rect->h = FIXED_HEIGHT;
 	
 	// LOG_info("GFX_blitMessage: %p (%ix%i)", dst, dst_rect->w,dst_rect->h);
 	
