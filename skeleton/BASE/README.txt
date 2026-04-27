@@ -109,25 +109,27 @@ For devices without a dedicated MENU button
 	RGB30: use L3 or R3 for MENU
 	M17:   use + or - for MENU
 
-RGB30 / MIYOO MINI PLUS / RG35XX (PLUS) / TRIMUI SMART PRO / TRIMUI BRICK / GKD PIXEL / MIYOO A30 / MAGICX XU MINI M / MIYOO FLIP / MAGICX MINI ZERO 28
-
-  Brightness: MENU + VOLUME UP
-                  or VOLUME DOWN
-
-MIYOO MINI / TRIMUI SMART / M17
+MIYOO MINI
 
   Volume: SELECT + L or R
   Brightness: START + L or R
-
-RGB30 / MIYOO MINI (PLUS) / RG35XX (PLUS) / TRIMUI SMART PRO / TRIMUI BRICK / GKD PIXEL / MIYOO A30 / MAGICX XU MINI M / MIYOO FLIP / MAGICX MINI ZERO 28
-
   Sleep: POWER
   Wake: POWER
 
 TRIMUI SMART / M17
 
+  Volume: SELECT + L or R
+  Brightness: START + L or R
   Sleep: MENU (twice)
   Wake: MENU
+
+RGB30 / MIYOO MINI PLUS / RG35XX (PLUS) / TRIMUI SMART PRO / TRIMUI BRICK / GKD PIXEL / MIYOO A30 / MAGICX XU MINI M / MIYOO FLIP / MAGICX MINI ZERO 28
+
+  Volume: hardware volume buttons
+  Brightness: MENU + VOLUME UP
+                  or VOLUME DOWN
+  Sleep: POWER
+  Wake: POWER
 
 TRIMUI SMART PRO / TRIMUI BRICK
 
