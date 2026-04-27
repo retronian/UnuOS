@@ -1,7 +1,7 @@
 UnuOS is a minimal launcher for the Trimui Smart (and Pro) and Brick, the Miyoo Mini (and Plus), A30, and Flip, the Powkiddy RGB30, the M17, the MagicX XU Mini M and Mini Zero 28, and the Anbernic RG*XX family--all from the same SD card. Why? Why not?
 
 Source:
-https://github.com/shauninman/minui
+https://github.com/retronian/UnuOS
 
 ----------------------------------------
 Installing
@@ -10,7 +10,7 @@ PREFACE
 
 UnuOS has two essential parts: an installer/updater zip archive named "UnuOS.zip" and a bootstrap file or folder with names that vary by platform.
 
-On devices that support two SD cards (eg. RG35XX) I will use the name "TF1" to refer to the card that goes into slot one of the device. All other instances of "SD card" or "primary card" refer to the card that goes into the second slot or to the sole SD card of devices that only support a single card. To be able to use MinUI from a single SD card on multiple devices you must install it on the second card of devices that support two SD cards.
+On devices that support two SD cards (eg. RG35XX) I will use the name "TF1" to refer to the card that goes into slot one of the device. All other instances of "SD card" or "primary card" refer to the card that goes into the second slot or to the sole SD card of devices that only support a single card. To be able to use UnuOS from a single SD card on multiple devices you must install it on the second card of devices that support two SD cards.
 
 The primary card should be a reputable brand and freshly formatted as FAT32 (MBR).
 
@@ -80,7 +80,7 @@ Copy "/rg35xxplus/dmenu.bin" (just the file) to the root of the "NO NAME" partit
 
 GKD PIXEL / GKD MINI
 
-An important caveat: this device is not cross-compatible with other MinUI-supported devices because its firmware lives on the SD card and its presence trips up all the other devices.
+An important caveat: this device is not cross-compatible with other UnuOS-supported devices because its firmware lives on the SD card and its presence trips up all the other devices.
 
 Backup your stock SD card (not just the "ROMS" partition but the entire thing). If you like to live on the edge just create a folder named "stock" on the "ROMS" partition and copy everything into that folder.
 
@@ -133,6 +133,10 @@ TRIMUI SMART PRO / TRIMUI BRICK
 
   Mute: FN switch (volume and rumble)
 
+ALL
+
+  Screenshot: SELECT + START
+
 ----------------------------------------
 Quicksave & auto-resume
 
@@ -144,6 +148,8 @@ Roms
 Included in this zip is a "Roms" folder containing folders for each console UnuOS currently supports. You can rename these folders but you must keep the uppercase tag name in parentheses in order to retain the mapping to the correct emulator (eg. "Nintendo Entertainment System (FC)" could be renamed to "Nintendo (FC)", "NES (FC)", or "Famicom (FC)").
 
 When one or more folder share the same display name (eg. "Game Boy Advance (GBA)" and "Game Boy Advance (MGBA)") they will be combined into a single menu item containing the roms from both folders (continuing the previous example, "Game Boy Advance"). This allows opening specific roms with an alternate pak.
+
+ROM names and launcher text are UTF-8 safe. Japanese, Simplified Chinese, Traditional Chinese, Korean, French, Spanish, and English UI strings are supported.
 
 ----------------------------------------
 Bios
@@ -164,7 +170,7 @@ Bios file names are case-sensitive:
 ----------------------------------------
 Disc-based games
 
-To streamline launching multi-file disc-based games with MinUI place your bin/cue (and/or iso/wav files) in a folder with the same name as the cue file. UnuOS will automatically launch the cue file instead of navigating into the folder when selected, eg.
+To streamline launching multi-file disc-based games with UnuOS place your bin/cue (and/or iso/wav files) in a folder with the same name as the cue file. UnuOS will automatically launch the cue file instead of navigating into the folder when selected, eg.
 
   Harmful Park (English v1.0)/
     Harmful Park (English v1.0).bin
@@ -199,10 +205,23 @@ A collection is just a text file containing an ordered list of full paths to rom
   /Roms/GBA/Metroid Fusion.gba
 
 ----------------------------------------
+Cover art
+
+UnuOS can show a PNG image for a rom, folder, or collection when that item is selected. Put images in a ".res" folder next to the file or folder they belong to. The image filename is the target name with ".png" appended, eg.
+
+  /Roms/GBA/Metroid Fusion.gba
+  /Roms/GBA/.res/Metroid Fusion.gba.png
+
+Folder and collection images use the same pattern:
+
+  /Roms/.res/GBA.png
+  /Collections/.res/Metroid series.txt.png
+
+----------------------------------------
 
 Display names
 
-Certain (unsupported arcade) cores require roms to use arcane file names. You can override the display name used throughout MinUI by creating a map.txt in the same folder as the files you want to rename. One line per file, `rom.ext` followed by a single tab followed by `Display Name`. You can hide a file by adding a `.` at the beginning of the display name. eg.
+Certain (unsupported arcade) cores require roms to use arcane file names. You can override the display name used throughout UnuOS by creating a map.txt in the same folder as the files you want to rename. One line per file, `rom.ext` followed by a single tab followed by `Display Name`. You can hide a file by adding a `.` at the beginning of the display name. eg.
 
   neogeo.zip	.Neo Geo Bios
   mslug.zip	Metal Slug
@@ -211,7 +230,7 @@ Certain (unsupported arcade) cores require roms to use arcane file names. You ca
 ----------------------------------------
 Simple mode
 
-Not simple enough for you (or maybe your kids)? MinUI has a simple mode that hides the Tools folder and replaces Options in the in-game menu with Reset. Perfect for handing off to littles (and olds too I guess). Just create an empty file named "enable-simple-mode" (no extension) in "/.userdata/shared/".
+Not simple enough for you (or maybe your kids)? UnuOS has a simple mode that hides the Tools folder and replaces Options in the in-game menu with Reset. Perfect for handing off to littles (and olds too I guess). Just create an empty file named "enable-simple-mode" (no extension) in "/.userdata/shared/".
 
 ----------------------------------------
 Advanced
@@ -270,4 +289,3 @@ Check out Jim's music:
 
   https://ourghosts.bandcamp.com/music
   https://www.patreon.com/ourghosts/
-
