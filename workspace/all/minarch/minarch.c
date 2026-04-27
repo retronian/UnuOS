@@ -727,14 +727,16 @@ typedef struct ButtonMapping {
 	int ignore;
 } ButtonMapping;
 
-static void ButtonMapping_clearMenuBinding(ButtonMapping* mappings, int local) {
+static ButtonMapping* ButtonMapping_clearMenuBinding(ButtonMapping* mappings, int local) {
 	for (int i=0; mappings[i].name; i++) {
 		ButtonMapping* mapping = &mappings[i];
 		if (mapping->local==local && mapping->mod) {
 			mapping->local = BTN_ID_NONE;
 			mapping->mod = 0;
+			return mapping;
 		}
 	}
+	return NULL;
 }
 
 static ButtonMapping default_button_mapping[] = { // used if pak.cfg doesn't exist or doesn't have bindings
@@ -3840,7 +3842,12 @@ int OptionControls_bind(MenuList* list, int i) {
 				if (PAD_isPressed(BTN_MENU)) {
 					item->value += LOCAL_BUTTON_COUNT;
 					button->mod = 1;
-					ButtonMapping_clearMenuBinding(config.shortcuts, button->local);
+					ButtonMapping* cleared = ButtonMapping_clearMenuBinding(config.shortcuts, button->local);
+					if (cleared) {
+						char message[256];
+						snprintf(message, sizeof(message), "MENU+%s was already bound to %s shortcut.\nCleared that shortcut.", device_button_names[button->local], cleared->name);
+						Menu_message(message, (char*[]){ "A",(char*)lang.okay, NULL });
+					}
 				}
 				else {
 					button->mod = 0;
@@ -3952,7 +3959,12 @@ static int OptionShortcuts_bind(MenuList* list, int i) {
 				if (PAD_isPressed(BTN_MENU)) {
 					item->value += LOCAL_BUTTON_COUNT;
 					button->mod = 1;
-					ButtonMapping_clearMenuBinding(config.controls, button->local);
+					ButtonMapping* cleared = ButtonMapping_clearMenuBinding(config.controls, button->local);
+					if (cleared) {
+						char message[256];
+						snprintf(message, sizeof(message), "MENU+%s was already bound to %s control.\nCleared that control.", device_button_names[button->local], cleared->name);
+						Menu_message(message, (char*[]){ "A",(char*)lang.okay, NULL });
+					}
 				}
 				else {
 					button->mod = 0;
