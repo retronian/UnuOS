@@ -36,8 +36,6 @@ keymon.elf &
 if [ -f "$DATETIME_PATH" ]; then
 	DATETIME=`cat "$DATETIME_PATH"`
 	date +'%F %T' -s "$DATETIME"
-	DATETIME=`date +'%s'`
-	date -u -s "@$DATETIME"
 fi
 
 #######################################

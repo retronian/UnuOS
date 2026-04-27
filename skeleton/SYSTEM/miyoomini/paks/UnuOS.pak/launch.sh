@@ -107,8 +107,6 @@ keymon.elf & # &> /mnt/SDCARD/keymon.txt &
 if [ -f "$DATETIME_PATH" ] && [ ! -f "$USERDATA_PATH/enable-rtc" ]; then
 	DATETIME=`cat "$DATETIME_PATH"`
 	date +'%F %T' -s "$DATETIME"
-	DATETIME=`date +'%s'`
-	date -u -s "@$DATETIME"
 fi
 
 #######################################
