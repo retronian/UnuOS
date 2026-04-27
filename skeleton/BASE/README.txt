@@ -235,6 +235,22 @@ Simple mode
 Not simple enough for you (or maybe your kids)? UnuOS has a simple mode that hides the Tools folder and replaces Options in the in-game menu with Reset. Perfect for handing off to littles (and olds too I guess). Just create an empty file named "enable-simple-mode" (no extension) in "/.userdata/shared/".
 
 ----------------------------------------
+Bootlogo tool
+
+Some devices include a Bootlogo tool for replacing the startup logo. It is available on M17, Miyoo Mini, Miyoo A30, Miyoo Flip, Trimui Smart, Trimui Smart Pro, Trimui Brick, and MagicX Mini Zero 28.
+
+The tool flashes the bundled logo by default. On M17, Miyoo Mini, Trimui Smart, Trimui Smart Pro, Trimui Brick, and MagicX Mini Zero 28 you can replace the bundled file in the Bootlogo.pak folder before running it:
+
+  M17:                 logo.bmp
+  Miyoo Mini:          logo.jpg
+  Trimui Smart:        logo.bmp
+  Trimui Smart Pro:    tg5040/bootlogo.bmp
+  Trimui Brick:        brick/bootlogo.bmp
+  MagicX Mini Zero 28: bootlogo.bmp
+
+Miyoo A30 and Miyoo Flip use the bundled bootlogo.bmp. The Bootlogo tool changes boot storage, creates a log.txt when possible, and disables itself after running so it does not flash repeatedly. Reinstall or rename the disabled folder if you need to run it again.
+
+----------------------------------------
 Advanced
 
 UnuOS can automatically run a user-authored shell script on boot. Just place a file named "auto.sh" in "/.userdata/<DEVICE>/". If you're on Windows, make sure your text editor uses Unix line-endings (eg. `\n`), these devices usually choke on Windows line-endings (eg. `\r\n`).
