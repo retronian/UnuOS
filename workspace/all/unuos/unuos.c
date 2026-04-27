@@ -957,6 +957,7 @@ static Array* getEntries(char* path){
 			while((dp = readdir(dh)) != NULL) {
 				if (hide(dp->d_name)) continue;
 				if (dp->d_type!=DT_DIR) continue;
+				if (!hasRoms(dp->d_name)) continue;
 				strcpy(tmp, dp->d_name);
 			
 				if (!prefixMatch(collated_path, full_path)) continue;
