@@ -538,6 +538,122 @@ static int hasEmu(char* emu_name) {
 	sprintf(pak_path, "%s/Emus/%s/%s.pak/launch.sh", SDCARD_PATH, PLATFORM, emu_name);
 	return exists(pak_path);
 }
+
+static unsigned int readUtf8(const unsigned char** ptr) {
+	const unsigned char* p = *ptr;
+	unsigned int c = *p++;
+	if (c<0x80) {
+		*ptr = p;
+		return c;
+	}
+	if ((c&0xE0)==0xC0 && (p[0]&0xC0)==0x80) {
+		unsigned int out = ((c&0x1F)<<6) | (p[0]&0x3F);
+		*ptr = p + 1;
+		return out;
+	}
+	if ((c&0xF0)==0xE0 && (p[0]&0xC0)==0x80 && (p[1]&0xC0)==0x80) {
+		unsigned int out = ((c&0x0F)<<12) | ((p[0]&0x3F)<<6) | (p[1]&0x3F);
+		*ptr = p + 2;
+		return out;
+	}
+	if ((c&0xF8)==0xF0 && (p[0]&0xC0)==0x80 && (p[1]&0xC0)==0x80 && (p[2]&0xC0)==0x80) {
+		unsigned int out = ((c&0x07)<<18) | ((p[0]&0x3F)<<12) | ((p[1]&0x3F)<<6) | (p[2]&0x3F);
+		*ptr = p + 3;
+		return out;
+	}
+	*ptr = p;
+	return c;
+}
+
+static char foldLatin(unsigned int c) {
+	if (c>='A' && c<='Z') return c + 32;
+	if (c<0x80) return c;
+	if ((c>=0x00C0 && c<=0x00C5) || (c>=0x00E0 && c<=0x00E5)) return 'a';
+	if (c==0x00C7 || c==0x00E7) return 'c';
+	if ((c>=0x00C8 && c<=0x00CB) || (c>=0x00E8 && c<=0x00EB)) return 'e';
+	if ((c>=0x00CC && c<=0x00CF) || (c>=0x00EC && c<=0x00EF)) return 'i';
+	if (c==0x00D1 || c==0x00F1) return 'n';
+	if ((c>=0x00D2 && c<=0x00D6) || c==0x00D8 || (c>=0x00F2 && c<=0x00F6) || c==0x00F8) return 'o';
+	if ((c>=0x00D9 && c<=0x00DC) || (c>=0x00F9 && c<=0x00FC)) return 'u';
+	if (c==0x00DD || c==0x00FD || c==0x00FF) return 'y';
+	return 0;
+}
+
+static void foldPathName(char* out, size_t out_size, const char* in) {
+	const unsigned char* ptr = (const unsigned char*)in;
+	size_t len = 0;
+	while (*ptr && len<out_size-1) {
+		const unsigned char* start = ptr;
+		unsigned int c = readUtf8(&ptr);
+		if (c>=0x0300 && c<=0x036F) continue;
+
+		char folded = foldLatin(c);
+		if (folded) {
+			out[len++] = folded;
+		}
+		else {
+			while (start<ptr && len<out_size-1) out[len++] = *start++;
+		}
+	}
+	out[len] = '\0';
+}
+
+static int pathNamesMatch(char* a, char* b) {
+	if (exactMatch(a, b)) return 1;
+
+	char folded_a[256];
+	char folded_b[256];
+	foldPathName(folded_a, sizeof(folded_a), a);
+	foldPathName(folded_b, sizeof(folded_b), b);
+	return exactMatch(folded_a, folded_b);
+}
+
+static int resolveExistingPath(char* path, char* resolved_path) {
+	if (exists(path)) {
+		strcpy(resolved_path, path);
+		return 1;
+	}
+	if (!prefixMatch(SDCARD_PATH, path)) return 0;
+
+	char current[MAX_PATH];
+	strcpy(current, SDCARD_PATH);
+
+	char* rel = path + strlen(SDCARD_PATH);
+	if (rel[0]=='/') rel += 1;
+
+	while (rel[0]) {
+		char component[256];
+		char* slash = strchr(rel, '/');
+		int len = slash ? slash - rel : strlen(rel);
+		if (len<=0 || len>=sizeof(component)) return 0;
+		strncpy(component, rel, len);
+		component[len] = '\0';
+
+		DIR* dh = opendir(current);
+		if (!dh) return 0;
+
+		int found = 0;
+		struct dirent* dp;
+		while((dp = readdir(dh)) != NULL) {
+			if (pathNamesMatch(dp->d_name, component)) {
+				char next[MAX_PATH];
+				snprintf(next, sizeof(next), "%s/%s", current, dp->d_name);
+				strcpy(current, next);
+				found = 1;
+				break;
+			}
+		}
+		closedir(dh);
+		if (!found) return 0;
+
+		rel = slash ? slash + 1 : rel + len;
+	}
+
+	if (!exists(current)) return 0;
+	strcpy(resolved_path, current);
+	return 1;
+}
+
 static int hasCue(char* dir_path, char* cue_path) { // NOTE: dir_path not rom_path
 	char* tmp = strrchr(dir_path, '/') + 1; // folder name
 	sprintf(cue_path, "%s/%s.cue", dir_path, tmp);
@@ -851,9 +967,10 @@ static Array* getCollection(char* path) {
 			
 			char sd_path[256];
 			sprintf(sd_path, "%s%s", SDCARD_PATH, line);
-			if (exists(sd_path)) {
-				int type = suffixMatch(".pak", sd_path) ? ENTRY_PAK : ENTRY_ROM; // ???
-				Array_push(entries, Entry_new(sd_path, type));
+			char resolved_path[256];
+			if (resolveExistingPath(sd_path, resolved_path)) {
+				int type = suffixMatch(".pak", resolved_path) ? ENTRY_PAK : ENTRY_ROM; // ???
+				Array_push(entries, Entry_new(resolved_path, type));
 				
 				// char emu_name[256];
 				// getEmuName(sd_path, emu_name);
