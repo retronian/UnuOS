@@ -42,11 +42,14 @@ src/$(1):
 src/$(1)/.patched: src/$(1)
 	(test ! -f patches/$(1).patch) || (test -f src/$(1)/.patched) || (cd src/$(1) && $(PATCH) -p1 < ../../patches/$(1).patch && touch .patched && true)
 
-src/$(1)/.patched-all:
+src/$(1)/.patched-platform: src/$(1)
+	(test ! -d patches/$(1)) || (test -f src/$(1)/.patched-platform) || (cd src/$(1) && $(foreach patch, $(sort $(wildcard patches/$(1)/*.patch)), $(PATCH) -p1 < ../../$(patch) &&) touch .patched-platform && true)
+
+src/$(1)/.patched-all: src/$(1)
 	(test ! -d ../../all/cores/patches/$(1)) || (test -f src/$(1)/.patched-all) || (cd src/$(1) && $(foreach patch, $(sort $(wildcard ../../all/cores/patches/$(1)/*.patch)), $(PATCH) -p1 < ../../$(patch) &&) touch .patched-all && true)
 	
 
-output/$(1)_libretro.so: src/$(1)/.patched src/$(1)/.patched-all
+output/$(1)_libretro.so: src/$(1)/.patched src/$(1)/.patched-platform src/$(1)/.patched-all
 	mkdir -p output
 	cd src/$$($1_BUILD_PATH) && $$($1_MAKE) $(PROCS)
 	mv src/$$($1_BUILD_PATH)/$(if $($(1)_CORE),$($(1)_CORE),$(1)_libretro.so) ./output
@@ -56,7 +59,7 @@ clone-$(1): src/$(1)
 status-$(1): src/$(1)
 	cd src/$(1) && git show --oneline -s
 
-patch-$(1): src/$(1)/.patched
+patch-$(1): src/$(1)/.patched src/$(1)/.patched-platform src/$(1)/.patched-all
 
 clean-$(1):
 	test ! -d src/$(1) || cd src/$$($1_BUILD_PATH) && $$($1_MAKE) clean
