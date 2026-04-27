@@ -53,6 +53,7 @@ UnuOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 - **Game Focus Mode.** Create `Collections/Only.txt` on the SD card to show only the games listed in that collection. Settings, Tools, Collections, Recently Played, and system folders are hidden while the file exists.
 - **Native in-app screenshot.** Hold SELECT + press START anywhere in the launcher or during gameplay to write `Screenshots/YYYY-MM-DD_HH-MM-SS.bmp` to the SD card.
 - **Tools menu localization.** Bundled Tools entries (ADBD, Bootlogo, Clock, Files, Input, IP, Remove Loading, Toggle 560p) are shown with localized names instead of their raw `.pak` directory names.
+- **Boot logo tools.** Supported devices include a one-shot Bootlogo tool for flashing the bundled or user-supplied startup logo.
 - **ZIP data descriptor support.** MinUI's ZIP loader failed on archives that used ZIP data descriptor mode (bit flag `0x0008`), which is common for Game Boy ROM dumps produced by some tools. UnuOS detects the flag and streams inflate until `Z_STREAM_END`.
 - **Text wrap hardening.** Fixed a fixed-size buffer overflow and a NULL dereference in `GFX_wrapText()` that could be triggered by long libretro core option descriptions or long CJK strings.
 
