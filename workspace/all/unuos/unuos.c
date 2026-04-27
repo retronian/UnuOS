@@ -232,6 +232,37 @@ static void getUniqueName(Entry* entry, char* out_name) {
 	strcpy(tmp, ")");
 }
 
+static int GFX_truncateTextWithSuffix(TTF_Font* font, const char* in_name, char* out_name, int max_width, int padding) {
+	int in_len = strlen(in_name);
+	if (in_len<4 || in_name[in_len-1]!=')') {
+		return GFX_truncateText(font, in_name, out_name, max_width, padding);
+	}
+
+	char* suffix = strrchr(in_name, '(');
+	if (!suffix || suffix==in_name || suffix[-1]!=' ') {
+		return GFX_truncateText(font, in_name, out_name, max_width, padding);
+	}
+
+	int suffix_width = 0;
+	TTF_SizeUTF8(font, suffix, &suffix_width, NULL);
+	if (suffix_width+padding>=max_width) {
+		return GFX_truncateText(font, in_name, out_name, max_width, padding);
+	}
+
+	char base_name[256];
+	int base_len = suffix - in_name - 1;
+	memcpy(base_name, in_name, base_len);
+	base_name[base_len] = '\0';
+
+	char truncated_base[256];
+	GFX_truncateText(font, base_name, truncated_base, max_width-suffix_width, padding);
+	snprintf(out_name, 256, "%s %s", truncated_base, suffix);
+
+	int text_width = 0;
+	TTF_SizeUTF8(font, out_name, &text_width, NULL);
+	return text_width + padding;
+}
+
 static void Directory_index(Directory* self) {
 	int is_collection = prefixMatch(COLLECTIONS_PATH, self->path);
 	int skip_index = exactMatch(FAUX_RECENT_PATH, self->path) || is_collection; // not alphabetized
@@ -1777,7 +1808,9 @@ int main (int argc, char *argv[]) {
 						trimSortingMeta(&entry_name);
 					
 						char display_name[256];
-						int text_width = GFX_truncateText(font.large, entry_unique ? entry_unique : entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
+						int text_width = entry_unique
+							? GFX_truncateTextWithSuffix(font.large, entry_unique, display_name, available_width, SCALE1(BUTTON_PADDING*2))
+							: GFX_truncateText(font.large, entry_name, display_name, available_width, SCALE1(BUTTON_PADDING*2));
 						int max_width = MIN(available_width, text_width);
 						if (j==selected_row) {
 							GFX_blitPill(ASSET_WHITE_PILL, screen, &(SDL_Rect){
@@ -1791,7 +1824,7 @@ int main (int argc, char *argv[]) {
 						else if (entry->unique) {
 							trimSortingMeta(&entry_unique);
 							char unique_name[256];
-							GFX_truncateText(font.large, entry_unique, unique_name, available_width, SCALE1(BUTTON_PADDING*2));
+							GFX_truncateTextWithSuffix(font.large, entry_unique, unique_name, available_width, SCALE1(BUTTON_PADDING*2));
 						
 							SDL_Surface* text = TTF_RenderUTF8_Blended(font.large, unique_name, COLOR_DARK_TEXT);
 							SDL_BlitSurface(text, &(SDL_Rect){
