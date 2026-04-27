@@ -12,7 +12,7 @@ endif
 
 ###########################################################
 
-.PHONY: all
+.PHONY: all fetch
 
 all:
 	cd ./$(PLATFORM)/libmsettings && make
@@ -26,6 +26,11 @@ all:
 	cd ./all/say/ && make
 	cd ./$(PLATFORM)/cores && make
 	cd ./$(PLATFORM) && make
+
+fetch:
+	cd ./$(PLATFORM) && make fetch
+	cd ./all/minarch && make fetch
+	cd ./$(PLATFORM)/cores && make fetch
 
 clean:
 	cd ./$(PLATFORM)/libmsettings && make clean

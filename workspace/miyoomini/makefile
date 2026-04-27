@@ -12,6 +12,9 @@ endif
 
 REQUIRES_SDL=other/sdl
 REQUIRES_COMMANDER=other/DinguxCommander
+FETCH_DEPS=$(REQUIRES_SDL) $(REQUIRES_COMMANDER)
+
+.PHONY: fetch
 
 all: readmes
 	cd blank && make
@@ -20,11 +23,13 @@ all: readmes
 	cd show && make
 	cd overclock && make
 
-early: $(REQUIRES_SDL) $(REQUIRES_COMMANDER)
+early: $(FETCH_DEPS)
 	cd other/sdl && ./make.sh
 	cd other/logotweak && make
 	cd other/latency_reduction && make
 	cd other/DinguxCommander && make -j
+
+fetch: $(FETCH_DEPS)
 
 clean:
 	cd blank && make clean

@@ -10,11 +10,15 @@ endif
 
 ###########################################################
 
+.PHONY: fetch
+
 all: readmes
 	cd ./boot && ./build.sh
 
 early: 
 	# early
+
+fetch:
 
 clean:
 	cd ./overclock && make clean

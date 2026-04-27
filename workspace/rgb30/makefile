@@ -12,6 +12,9 @@ endif
 
 REQUIRES_COMMANDER=other/DinguxCommander
 REQUIRES_SDLCOMPAT=other/sdl12-compat
+FETCH_DEPS=$(REQUIRES_COMMANDER) $(REQUIRES_SDLCOMPAT)
+
+.PHONY: fetch
 
 all: readmes
 	cd show && make
@@ -19,6 +22,8 @@ all: readmes
 early: $(REQUIRES_COMMANDER) $(REQUIRES_SDLCOMPAT)/build
 	cd $(REQUIRES_COMMANDER) && make -j
 	cd $(REQUIRES_SDLCOMPAT) && cmake --build build
+
+fetch: $(FETCH_DEPS)
 
 clean:
 	cd $(REQUIRES_COMMANDER) && make clean

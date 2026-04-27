@@ -5,7 +5,7 @@ PLATFORM=$(UNION_PLATFORM)
 endif
 
 ifeq (,$(PLATFORM))
-	$(error please specify PLATFORM, eg. PLATFORM=trimui make)
+$(error please specify PLATFORM, eg. PLATFORM=trimui make)
 endif
 
 ###############################
@@ -25,6 +25,8 @@ PROCS = -j4
 ###############################
 
 BUILD_ROOT=../../$(PLATFORM)/cores
+
+.PHONY: fetch
 
 define TEMPLATE=
 
@@ -71,6 +73,8 @@ all: cores
 $(foreach CORE,$(CORES),$(eval $(call TEMPLATE,$(CORE))))
 
 cores: $(foreach CORE,$(CORES),$(CORE))
+
+fetch: $(foreach CORE,$(CORES),clone-$(CORE))
 	
 clean: $(foreach CORE,$(CORES),clean-$(CORE))
 	

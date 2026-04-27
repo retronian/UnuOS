@@ -13,12 +13,17 @@ endif
 ###########################################################
 
 REQUIRES_351FILES=other/351files
+FETCH_DEPS=$(REQUIRES_351FILES)
+
+.PHONY: fetch
 
 all: readmes
 	
-early: $(REQUIRES_351FILES)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd $(REQUIRES_351FILES) && make clean && START_PATH=/storage/TF2 CXX=${CROSS_COMPILE}g++ make
+
+fetch: $(FETCH_DEPS)
 	
 clean:
 	cd $(REQUIRES_351FILES) && make clean

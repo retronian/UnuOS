@@ -13,13 +13,18 @@ endif
 ###########################################################
 
 REQUIRES_COMMANDER=other/DinguxCommander
+FETCH_DEPS=$(REQUIRES_COMMANDER)
+
+.PHONY: fetch
 
 all: readmes
 	cd ./overclock && make
 	cd ./boot && ./build.sh
 
-early: $(REQUIRES_COMMANDER)
+early: $(FETCH_DEPS)
 	cd other/DinguxCommander && make -j
+
+fetch: $(FETCH_DEPS)
 
 clean:
 	cd ./overclock && make clean

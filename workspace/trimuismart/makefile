@@ -12,14 +12,19 @@ endif
 
 REQUIRES_COMMANDER=other/DinguxCommander
 REQUIRES_UNZIP60=other/unzip60
+FETCH_DEPS=$(REQUIRES_COMMANDER) $(REQUIRES_UNZIP60)
+
+.PHONY: fetch
 
 all: readmes
 	cd show && make
 
-early: $(REQUIRES_COMMANDER) $(REQUIRES_UNZIP60)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd other/DinguxCommander && make -j
 	cd other/unzip60 && make -f unix/Makefile.trimuismart unzip
+
+fetch: $(FETCH_DEPS)
 
 clean:
 	cd show && make clean

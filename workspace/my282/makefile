@@ -14,17 +14,22 @@ endif
 
 REQUIRES_COMMANDER=other/DinguxCommander-sdl2
 REQUIRES_UNZIP60=other/unzip60
+FETCH_DEPS=$(REQUIRES_COMMANDER) $(REQUIRES_UNZIP60)
+
+.PHONY: fetch
 
 all: readmes
 	cd show && make
 	cd overclock && make
 	cd other/squashfs && make
 
-early: $(REQUIRES_COMMANDER) $(REQUIRES_UNZIP60)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd $(REQUIRES_COMMANDER) && make -j
 	cd $(REQUIRES_UNZIP60) && make -f unix/Makefile.trimuismart unzip
 	cd libmstick && make
+
+fetch: $(FETCH_DEPS)
 	
 clean:
 	cd show && make clean
