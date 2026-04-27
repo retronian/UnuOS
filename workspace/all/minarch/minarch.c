@@ -727,6 +727,16 @@ typedef struct ButtonMapping {
 	int ignore;
 } ButtonMapping;
 
+static void ButtonMapping_clearMenuBinding(ButtonMapping* mappings, int local) {
+	for (int i=0; mappings[i].name; i++) {
+		ButtonMapping* mapping = &mappings[i];
+		if (mapping->local==local && mapping->mod) {
+			mapping->local = BTN_ID_NONE;
+			mapping->mod = 0;
+		}
+	}
+}
+
 static ButtonMapping default_button_mapping[] = { // used if pak.cfg doesn't exist or doesn't have bindings
 	{"Up",			RETRO_DEVICE_ID_JOYPAD_UP,		BTN_ID_DPAD_UP},
 	{"Down",		RETRO_DEVICE_ID_JOYPAD_DOWN,	BTN_ID_DPAD_DOWN},
@@ -3818,13 +3828,14 @@ int OptionControls_bind(MenuList* list, int i) {
 		PAD_poll();
 		
 		// NOTE: off by one because of the initial NONE value
-		for (int id=0; id<=LOCAL_BUTTON_COUNT; id++) {
+		for (int id=1; id<=LOCAL_BUTTON_COUNT; id++) {
 			if (PAD_justPressed(1 << (id-1))) {
 				item->value = id;
 				button->local = id - 1;
 				if (PAD_isPressed(BTN_MENU)) {
 					item->value += LOCAL_BUTTON_COUNT;
 					button->mod = 1;
+					ButtonMapping_clearMenuBinding(config.shortcuts, button->local);
 				}
 				else {
 					button->mod = 0;
@@ -3929,13 +3940,14 @@ static int OptionShortcuts_bind(MenuList* list, int i) {
 		PAD_poll();
 		
 		// NOTE: off by one because of the initial NONE value
-		for (int id=0; id<=LOCAL_BUTTON_COUNT; id++) {
+		for (int id=1; id<=LOCAL_BUTTON_COUNT; id++) {
 			if (PAD_justPressed(1 << (id-1))) {
 				item->value = id;
 				button->local = id - 1;
 				if (PAD_isPressed(BTN_MENU)) {
 					item->value += LOCAL_BUTTON_COUNT;
 					button->mod = 1;
+					ButtonMapping_clearMenuBinding(config.controls, button->local);
 				}
 				else {
 					button->mod = 0;
