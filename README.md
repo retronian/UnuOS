@@ -38,7 +38,7 @@ Japanese UI:
 - [Collections](https://github.com/retronian/UnuOS/wiki/Collections) (custom ROM groupings across consoles)
 - [Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode) for showing only selected games
 - [In-app screenshot](https://github.com/retronian/UnuOS/wiki/Screenshots) (SELECT+START)
-- Auto sleep after 30 seconds; hold POWER to sleep / wake
+- Auto sleep after 30 seconds; manual sleep / wake shortcut depends on device
 - Resumes from the previous running state on power on
 
 ## Additions from MinUI
