@@ -10,9 +10,13 @@ endif
 
 ###########################################################
 
+.PHONY: fetch
+
 all: readmes
 
 early:
+
+fetch:
 
 clean:
 	

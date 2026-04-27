@@ -25,7 +25,7 @@ RELEASE_NAME=$(RELEASE_BASE)-$(RELEASE_DOT)
 
 ###########################################################
 
-.PHONY: build
+.PHONY: build fetch
 
 export MAKEFLAGS=--no-print-directory
 
@@ -41,6 +41,10 @@ build:
 	# ----------------------------------------------------
 	make build -f makefile.toolchain PLATFORM=$(PLATFORM)
 	# ----------------------------------------------------
+
+fetch:
+	for PLATFORM in $(PLATFORMS); do make -f makefile.toolchain PLATFORM=$$PLATFORM fetch; done
+	for PLATFORM in $(PLATFORMS); do make -C workspace PLATFORM=$$PLATFORM fetch; done
 
 system:
 	make -f ./workspace/$(PLATFORM)/platform/makefile.copy PLATFORM=$(PLATFORM)

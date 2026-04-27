@@ -16,13 +16,16 @@ REQUIRES_UNZIP60=other/unzip60
 REQUIRES_SDL2=other/sdl2
 REQUIRES_DTC=other/dtc
 REQUIRES_FBSET=other/fbset
+FETCH_DEPS=$(REQUIRES_UNZIP60) $(REQUIRES_SDL2) $(REQUIRES_DTC) $(REQUIRES_FBSET)
+
+.PHONY: fetch
 
 all: readmes
 	cd boot && ./build.sh
 	cd init && make
 	cd show && make
 
-early: $(REQUIRES_UNZIP60) $(REQUIRES_SDL2) $(REQUIRES_DTC) $(REQUIRES_FBSET)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd $(REQUIRES_DTC) && CC=${CROSS_COMPILE}gcc make NO_PYTHON=1 EXTRA_CFLAGS="-Wno-error=sign-compare" dtc
 	cd $(REQUIRES_UNZIP60) && make -f unix/Makefile.trimuismart unzip
@@ -61,6 +64,8 @@ early: $(REQUIRES_UNZIP60) $(REQUIRES_SDL2) $(REQUIRES_DTC) $(REQUIRES_FBSET)
 	# copy libs from toolchain (later moved to build)
 	cp $(PREFIX)/lib/libSDL2_image-2.0.so.0.0.1 ../libSDL2_image-2.0.so.0
 	cp $(PREFIX)/lib/libSDL2_ttf-2.0.so.0.14.0 ../libSDL2_ttf-2.0.so.0
+
+fetch: $(FETCH_DEPS)
 	
 clean:
 	cd boot && rm -rf output

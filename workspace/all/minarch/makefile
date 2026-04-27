@@ -8,8 +8,10 @@ ifeq (,$(PLATFORM))
 	$(error please specify PLATFORM, eg. PLATFORM=trimui make)
 endif
 
+ifeq (,$(filter fetch,$(MAKECMDGOALS)))
 ifeq (,$(CROSS_COMPILE))
-	$(error missing CROSS_COMPILE for this toolchain)
+$(error missing CROSS_COMPILE for this toolchain)
+endif
 endif
 
 ###########################################################
@@ -40,9 +42,14 @@ CFLAGS += -DBUILD_DATE=\"${BUILD_DATE}\" -DBUILD_HASH=\"${BUILD_HASH}\"
 
 PRODUCT= build/$(PLATFORM)/$(TARGET).elf
 
+.PHONY: fetch
+
 all: libretro-common $(PREFIX)/include/msettings.h
 	mkdir -p build/$(PLATFORM)
 	$(CC) $(SOURCE) -o $(PRODUCT) $(CFLAGS) $(LDFLAGS)
+
+fetch: libretro-common
+
 clean:
 	rm -f $(PRODUCT)
 

@@ -13,14 +13,19 @@ endif
 ###########################################################
 
 REQUIRES_COMMANDER=other/DinguxCommander-sdl2
+FETCH_DEPS=$(REQUIRES_COMMANDER)
+
+.PHONY: fetch
 
 all: readmes
 	cd bl && make
 	cd show && make
 
-early: $(REQUIRES_COMMANDER)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd $(REQUIRES_COMMANDER) && make -j
+
+fetch: $(FETCH_DEPS)
 		
 clean:
 	cd bl && make clean

@@ -14,16 +14,21 @@ REQUIRES_EVTEST=other/evtest
 REQUIRES_JSTEST=other/jstest
 REQUIRES_UNZIP60=other/unzip60
 REQUIRES_COMMANDER=other/DinguxCommander-sdl2
+FETCH_DEPS=$(REQUIRES_EVTEST) $(REQUIRES_JSTEST) $(REQUIRES_UNZIP60) $(REQUIRES_COMMANDER)
+
+.PHONY: fetch
 
 all: readmes
 	cd show && make
 
-early: $(REQUIRES_EVTEST) $(REQUIRES_JSTEST) $(REQUIRES_UNZIP60) $(REQUIRES_COMMANDER)
+early: $(FETCH_DEPS)
 	mkdir -p other
 	cd $(REQUIRES_COMMANDER) && make -j
 	cd $(REQUIRES_EVTEST) && $(CROSS_COMPILE)gcc -o evtest evtest.c
 	cd $(REQUIRES_JSTEST) && $(CROSS_COMPILE)gcc -o jstest jstest.c
 	cd $(REQUIRES_UNZIP60) && make -f unix/Makefile.trimuismart unzip
+
+fetch: $(FETCH_DEPS)
 
 clean:
 	cd show && make clean
