@@ -50,5 +50,5 @@ After `Only.txt` no longer exists, UnuOS returns to the normal launcher root.
 
 - Empty lines are ignored.
 - Missing or incorrect paths are skipped.
-- If `Only.txt` exists but contains no valid games, the launcher root is empty.
+- If `Only.txt` exists but contains no valid games, UnuOS shows the normal `Empty folder` message, matching an empty collection.
 - Game order follows the order in `Only.txt`.
