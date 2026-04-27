@@ -2039,6 +2039,7 @@ static int setFastForward(int enable) {
 
 static uint32_t buttons = 0; // RETRO_DEVICE_ID_JOYPAD_* buttons
 static int ignore_menu = 0;
+static uint32_t shortcut_ignored = 0;
 
 // MENU + SELECT saves a BMP screenshot of whatever surface is currently
 // on screen. Works from gameplay, minarch menus, and state/save previews
@@ -2094,6 +2095,7 @@ static void input_poll_callback(void) {
 			if (i==SHORTCUT_TOGGLE_FF) {
 				if (PAD_justPressed(btn)) {
 					toggled_ff_on = setFastForward(!fast_forward);
+					shortcut_ignored |= btn;
 					if (mapping->mod) ignore_menu = 1;
 					break;
 				}
@@ -2107,10 +2109,12 @@ static void input_poll_callback(void) {
 				// if it was initially turned on with the toggle button
 				if (PAD_justPressed(btn) || (!toggled_ff_on && PAD_justReleased(btn))) {
 					fast_forward = setFastForward(PAD_isPressed(btn));
+					if (PAD_justPressed(btn)) shortcut_ignored |= btn;
 					if (mapping->mod) ignore_menu = 1; // very unlikely but just in case
 				}
 			}
 			else if (PAD_justPressed(btn)) {
+				shortcut_ignored |= btn;
 				switch (i) {
 					case SHORTCUT_SAVE_STATE: Menu_saveState(); break;
 					case SHORTCUT_LOAD_STATE: Menu_loadState(); break;
@@ -2148,20 +2152,13 @@ static void input_poll_callback(void) {
 		}
 	}
 	
-	// TODO: figure out how to ignore button when MENU+button is handled first
-	// TODO: array size of LOCAL_ whatever that macro is
-	// TODO: then split it into two loops
-	// TODO: first check for MENU+button
-	// TODO: when found mark button the array
-	// TODO: then check for button
-	// TODO: only modify if absent from array
-	// TODO: the shortcuts loop above should also contribute to the array
-	
+	shortcut_ignored &= pad.is_pressed;
 	buttons = 0;
 	for (int i=0; config.controls[i].name; i++) {
 		ButtonMapping* mapping = &config.controls[i];
 		int btn = 1 << mapping->local;
 		if (btn==BTN_NONE) continue; // present buttons can still be unbound
+		int local_btn = btn;
 		if (gamepad_type==0) {
 			switch(btn) {
 				case BTN_DPAD_UP: 		btn = BTN_UP; break;
@@ -2170,6 +2167,7 @@ static void input_poll_callback(void) {
 				case BTN_DPAD_RIGHT: 	btn = BTN_RIGHT; break;
 			}
 		}
+		if (shortcut_ignored & local_btn) continue;
 		if (PAD_isPressed(btn) && (!mapping->mod || PAD_isPressed(BTN_MENU))) {
 			buttons |= 1 << mapping->retro;
 			if (mapping->mod) ignore_menu = 1;
