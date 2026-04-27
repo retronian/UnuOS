@@ -54,7 +54,7 @@ clean:
 	rm -f $(PRODUCT)
 
 libretro-common:
-	git clone https://github.com/libretro/libretro-common
+	git clone --depth 1 https://github.com/libretro/libretro-common
 	
 $(PREFIX)/include/msettings.h:
 	cd /root/workspace/$(PLATFORM)/libmsettings && make
