@@ -1484,15 +1484,20 @@ static void Option_setValue(Option* item, const char* value) {
 	item->value = Option_getValueIndex(item, value);
 }
 
-// TODO: does this also need to be applied to OptionList_vars()?
-static const char* option_key_name[] = {
-	"pcsx_rearmed_analog_combo", "DualShock Toggle Combo",
-	NULL
+typedef struct OptionNameOverride {
+	const char* core_name;
+	const char* key;
+	const char* name;
+} OptionNameOverride;
+
+static const OptionNameOverride option_name_overrides[] = {
+	{"pcsx_rearmed", "pcsx_rearmed_analog_combo", "DualShock Toggle Combo"},
+	{NULL, NULL, NULL}
 };
 static const char* getOptionNameFromKey(const char* key, const char* name) {
-	char* _key = NULL;
-	for (int i=0; (_key = (char*)option_key_name[i]); i+=2) {
-		if (exactMatch((char*)key,_key)) return option_key_name[i+1];
+	for (int i=0; option_name_overrides[i].key; i++) {
+		const OptionNameOverride* override = &option_name_overrides[i];
+		if (exactMatch((char*)core.name, (char*)override->core_name) && exactMatch((char*)key, (char*)override->key)) return override->name;
 	}
 	return name;
 }
