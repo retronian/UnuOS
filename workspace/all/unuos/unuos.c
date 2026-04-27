@@ -665,6 +665,15 @@ static int hasRoms(char* dir_name) {
 }
 static Array* getRoot(void) {
 	Array* root = Array_new();
+
+	if (exists(ONLY_COLLECTION_PATH)) {
+		Array* only = getCollection(ONLY_COLLECTION_PATH);
+		for (int i=0; i<only->count; i++) {
+			Array_push(root, only->items[i]);
+		}
+		Array_free(only); // root now owns these entries
+		return root;
+	}
 	
 	if (hasRecents()) Array_push(root, Entry_new(FAUX_RECENT_PATH, ENTRY_DIR));
 	

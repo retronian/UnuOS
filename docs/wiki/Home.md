@@ -11,3 +11,4 @@ Feature documentation and SD card setup notes for UnuOS.
 
 - [Screenshots](Screenshots)
 - [Localization](Localization)
+- [Game Focus Mode](Game-Focus-Mode)
