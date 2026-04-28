@@ -992,13 +992,13 @@ static struct Config {
 	.controls = default_button_mapping,
 	.shortcuts = (ButtonMapping[]){
 		// name is overwritten with the localized string in Config_syncLang()
-		[SHORTCUT_SAVE_STATE]			= {"Save State",		-1, BTN_ID_NONE, 0},
-		[SHORTCUT_LOAD_STATE]			= {"Load State",		-1, BTN_ID_NONE, 0},
+		[SHORTCUT_SAVE_STATE]			= {"Save State",		-1, BTN_ID_R1, 1},
+		[SHORTCUT_LOAD_STATE]			= {"Load State",		-1, BTN_ID_L1, 1},
 		[SHORTCUT_RESET_GAME]			= {"Reset Game",		-1, BTN_ID_NONE, 0},
 		[SHORTCUT_SAVE_QUIT]			= {"Save & Quit",		-1, BTN_ID_NONE, 0},
 		[SHORTCUT_CYCLE_SCALE]			= {"Cycle Scaling",		-1, BTN_ID_NONE, 0},
 		[SHORTCUT_CYCLE_EFFECT]			= {"Cycle Effect",		-1, BTN_ID_NONE, 0},
-		[SHORTCUT_TOGGLE_FF]			= {"Toggle FF",			-1, BTN_ID_NONE, 0},
+		[SHORTCUT_TOGGLE_FF]			= {"Toggle FF",			-1, BTN_ID_X, 1},
 		[SHORTCUT_HOLD_FF]				= {"Hold FF",			-1, BTN_ID_NONE, 0},
 		{NULL}
 	},

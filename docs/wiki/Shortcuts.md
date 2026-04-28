@@ -92,6 +92,33 @@ Trimui Smart Pro and Trimui Brick also support the `FN` switch for mute.
 
 These controls apply while a game is running.
 
+There are two different kinds of controls during gameplay:
+
+- Game controls are the normal buttons sent to the emulator core.
+- Gameplay shortcuts are UnuOS actions such as save state, load state, reset, quit, scaling, effects, and fast-forward.
+
+By default, game controls are mapped, and the most common gameplay shortcuts are preassigned.
+
+Default game control mapping:
+
+| Emulator input | Device button |
+| --- | --- |
+| D-pad Up / Down / Left / Right | `UP` / `DOWN` / `LEFT` / `RIGHT` |
+| A Button | `A` |
+| B Button | `B` |
+| X Button | `X` |
+| Y Button | `Y` |
+| Start | `START` |
+| Select | `SELECT` |
+| L1 Button | `L1` |
+| R1 Button | `R1` |
+| L2 Button | `L2` |
+| R2 Button | `R2` |
+| L3 Button | `L3` |
+| R3 Button | `R3` |
+
+Some console paks override this mapping where the original system uses different button names. For example, Mega Drive / Genesis uses `SELECT` as Mode.
+
 | Shortcut | Action |
 | --- | --- |
 | Tap `MENU` | Open the in-game menu |
@@ -99,7 +126,20 @@ These controls apply while a game is running.
 | Power / sleep shortcut | Sleep or power off, creating a quicksave when possible |
 | Configured shortcut | Run the action assigned in `Options` -> `Shortcuts` |
 
-UnuOS does not assign gameplay action shortcuts by default. You can configure them per console or per game from the in-game menu.
+Default gameplay shortcut mapping:
+
+| Shortcut action | Default button |
+| --- | --- |
+| Save State | `MENU` + `R1` |
+| Load State | `MENU` + `L1` |
+| Reset Game | `NONE` |
+| Save & Quit | `NONE` |
+| Cycle Scaling | `NONE` |
+| Cycle Effect | `NONE` |
+| Toggle Fast Forward | `MENU` + `X` |
+| Hold Fast Forward | `NONE` |
+
+You can configure gameplay shortcuts per console or per game from the in-game menu.
 
 ## Configurable Gameplay Shortcuts
 
@@ -119,8 +159,8 @@ Available shortcut actions:
 | Save & Quit | Save state, then quit to the launcher |
 | Cycle Scaling | Switch to the next screen scaling mode |
 | Cycle Effect | Switch to the next screen effect |
-| Toggle FF | Toggle fast-forward on or off |
-| Hold FF | Fast-forward while the assigned button is held |
+| Toggle Fast Forward | Toggle fast-forward on or off |
+| Hold Fast Forward | Fast-forward while the assigned button is held |
 
 Each action can be bound to a single button or to `MENU` + another button. `X` clears a binding while editing shortcuts.
 
