@@ -46,6 +46,7 @@ Japanese UI:
 - [Box Art](https://github.com/retronian/UnuOS/wiki/Box-Art)
 - [Collections](https://github.com/retronian/UnuOS/wiki/Collections)
 - [Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode)
+- [Shortcuts](https://github.com/retronian/UnuOS/wiki/Shortcuts)
 - [Screenshots](https://github.com/retronian/UnuOS/wiki/Screenshots)
 - [Localization](https://github.com/retronian/UnuOS/wiki/Localization)
 
