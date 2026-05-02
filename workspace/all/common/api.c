@@ -365,7 +365,7 @@ struct blend_args {
 	uint16_t *blend_line;
 } blend_args;
 
-#if __ARM_ARCH >= 5
+#if defined(__arm__) && __ARM_ARCH >= 5
 static inline uint32_t average16(uint32_t c1, uint32_t c2) {
 	uint32_t ret, lowbits = 0x0821;
 	asm ("eor %0, %2, %3\r\n"
@@ -1395,6 +1395,48 @@ FALLBACK_IMPLEMENTATION void PLAT_pollInput(void) {
 		}
 	}
 	
+#if defined(UNUOS_TEST_INPUT)
+	static const char* test_input = NULL;
+	static int test_index = 0;
+	static int test_wait = 8;
+	static int test_release = BTN_NONE;
+	if (!test_input) test_input = getenv("UNUOS_TEST_INPUT");
+	if (test_input && test_input[0]!='\0') {
+		if (test_release!=BTN_NONE) {
+			pad.just_released |= test_release;
+			pad.is_pressed &= ~test_release;
+			test_release = BTN_NONE;
+		}
+		if (test_wait>0) {
+			test_wait -= 1;
+		}
+		else {
+			int btn = BTN_NONE;
+			char token = test_input[test_index];
+			if (token=='A') btn = BTN_A;
+			else if (token=='Y') btn = BTN_Y;
+			else if (token=='F') btn = BTN_SELECT | BTN_Y;
+
+			if (btn!=BTN_NONE) {
+				LOG_info("UNUOS_TEST_INPUT token %c\n", token);
+				if (token=='F') {
+					pad.is_pressed |= BTN_SELECT;
+					pad.just_pressed |= BTN_Y;
+					pad.just_repeated |= BTN_Y;
+				}
+				else {
+					pad.just_pressed |= btn;
+					pad.just_repeated |= btn;
+					pad.is_pressed |= btn;
+				}
+				test_release = btn;
+				test_index += 1;
+				test_wait = 8;
+			}
+		}
+	}
+#endif
+
 	if (lid.has_lid && PLAT_lidChanged(NULL)) pad.just_released |= BTN_SLEEP;
 }
 FALLBACK_IMPLEMENTATION int PLAT_shouldWake(void) {
@@ -1419,7 +1461,7 @@ FALLBACK_IMPLEMENTATION int PLAT_shouldWake(void) {
 				if (lid.has_lid && !lid.is_open) return 0;  // do it here so we eat the input
 				return 1;
 			}
-		} 
+		}
 	}
 	return 0;
 }

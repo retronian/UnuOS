@@ -26,6 +26,7 @@ gcc \
     -lm -lpthread -ldl \
     -DPLATFORM=\"linux\" \
     -DUSE_SDL2 \
+    -DUNUOS_TEST_INPUT \
     -DBUILD_DATE=\"$BUILD_DATE\" \
     -DBUILD_HASH=\"$BUILD_HASH\" \
     -O0 -g \

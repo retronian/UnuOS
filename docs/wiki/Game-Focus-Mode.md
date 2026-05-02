@@ -1,6 +1,6 @@
-Game Focus Mode shows only the games listed in a dedicated collection.
+Game Focus Mode shows only your favorite games.
 
-This is useful when you want the launcher to show a small, intentional set of games instead of the full SD card library.
+Use it when you want the launcher to temporarily hide the full SD card library and focus on a smaller set of games.
 
 ## Screenshots
 
@@ -8,52 +8,25 @@ This is useful when you want the launcher to show a small, intentional set of ga
 | --- | --- | --- |
 | ![Game Focus Mode in English](../screenshots/game-focus-en.png) | ![Game Focus Mode in Japanese](../screenshots/game-focus-ja.png) | ![Game Focus Mode in Simplified Chinese](../screenshots/game-focus-zh-cn.png) |
 
-## Enabling Game Focus Mode
+## Favorites
 
-Create this file on the SD card:
+While browsing games in the launcher:
 
-```text
-/Collections/Selection.txt
-```
+| Shortcut | Action |
+| --- | --- |
+| `Y` | Add or remove the selected game from Favorites |
+| `SELECT` + `Y` | Toggle Game Focus Mode |
 
-When `Selection.txt` exists, UnuOS enters Game Focus Mode automatically.
-
-The file uses the same format as a normal collection: one absolute SD card path per line.
-
-```text
-/Roms/Game Boy (GB)/Tetris.gb
-/Roms/Game Boy (GB)/Final Fantasy Adventure.gb
-/Roms/Nintendo Entertainment System (FC)/Final Fantasy II.nes
-/Roms/PC Engine (PCE)/Bonk's Adventure.pce
-```
+Favorite games show a `★` mark before their name and appear in the `Favorites` root list.
 
 ## What Changes
 
-While `Selection.txt` exists, the launcher root shows only the valid games listed in that file.
+When Game Focus Mode is enabled, the launcher shows only favorite games.
 
-The following entries are hidden:
-
-- Recently Played
-- Collections
-- Tools
-- Settings
-- System folders
-
-## Disabling Game Focus Mode
-
-Delete or rename `Selection.txt`.
-
-Example:
-
-```text
-/Collections/.Selection.txt
-```
-
-After `Selection.txt` no longer exists, UnuOS returns to the normal launcher root.
+Press `SELECT` + `Y` again to return to the normal launcher.
 
 ## Notes
 
-- Empty lines are ignored.
-- Missing or incorrect paths are skipped.
-- If `Selection.txt` exists but contains no valid games, UnuOS shows the normal `Empty folder` message, matching an empty collection.
-- Game order follows the order in `Selection.txt`.
+- Favorites are saved in `.userdata/shared/.unuos/favorites.txt`.
+- Missing games are skipped.
+- Favorite order follows the order games were added.

@@ -70,6 +70,7 @@ static int device_width;
 static int device_height;
 static int device_pitch;
 static int rotate = 0;
+static void injectTestInput(void);
 SDL_Surface* PLAT_initVideo(void) {
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 	// SDL_ShowCursor(0);
@@ -200,6 +201,7 @@ void PLAT_setSharpness(int sharpness) {
 }
 void PLAT_vsync(int remaining) {
 	if (remaining>0) SDL_Delay(remaining);
+	injectTestInput();
 }
 
 scaler_t PLAT_getScaler(GFX_Renderer* renderer) {
@@ -228,6 +230,19 @@ static void captureScreenIfRequested(void) {
 	exit(0);
 }
 
+static void injectTestInput(void) {
+	static int done_wait = 0;
+	char* input = getenv("UNUOS_TEST_INPUT");
+	if (!input || input[0]=='\0') return;
+
+	done_wait += 1;
+	if (done_wait==1000) {
+		char* path = getenv("UNUOS_TEST_CAPTURE_SCREEN");
+		if (path && path[0]!='\0') SDL_SaveBMP(vid.screen, path);
+		exit(0);
+	}
+}
+
 void PLAT_flip(SDL_Surface* IGNORED, int ignored) {
 	
 	if (!vid.blit) {
@@ -243,6 +258,7 @@ void PLAT_flip(SDL_Surface* IGNORED, int ignored) {
 		}
 		SDL_RenderPresent(vid.renderer);
 		captureScreenIfRequested();
+		injectTestInput();
 		return;
 	}
 	
@@ -297,6 +313,7 @@ void PLAT_flip(SDL_Surface* IGNORED, int ignored) {
 	SDL_RenderPresent(vid.renderer);
 	vid.blit = NULL;
 	captureScreenIfRequested();
+	injectTestInput();
 }
 
 ///////////////////////////////

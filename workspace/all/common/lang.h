@@ -27,6 +27,7 @@ typedef struct {
 	const char* empty_folder;
 	// root entries (minui.c)
 	const char* recently_played;
+	const char* favorites;
 	const char* collections;
 	const char* tools;
 	const char* settings;

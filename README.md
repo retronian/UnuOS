@@ -36,7 +36,7 @@ Japanese UI:
 - [Multi-language UI](https://github.com/retronian/UnuOS/wiki/Localization), including CJK
 - [Cover art](https://github.com/retronian/UnuOS/wiki/Box-Art) for ROMs and folders
 - [Collections](https://github.com/retronian/UnuOS/wiki/Collections) (custom ROM groupings across consoles)
-- [Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode) for showing only selected games
+- [Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode) for showing only favorite games
 - [In-app screenshot](https://github.com/retronian/UnuOS/wiki/Screenshots) (SELECT+START)
 - Auto sleep after 30 seconds; manual sleep / wake shortcut depends on device
 - Resumes from the previous running state on power on
@@ -59,7 +59,7 @@ UnuOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 - **UTF-8 safe text truncation.** MinUI's ROM name truncation cut text on byte boundaries, which corrupted (and could crash on) multi-byte characters. UnuOS truncates on codepoint boundaries.
 - **[Cover art](https://github.com/retronian/UnuOS/wiki/Box-Art), as a first-class feature.** Put a PNG next to a ROM or folder: `<rom path>/.res/<rom name>.png`. The image is shown on the right side of the launcher when the item is selected. Recommended size: 240x240 max, PNG with transparency. Works for folders too (main platform list). Legacy `<rom file>.png` names are still supported as a fallback.
 - **[Collections](https://github.com/retronian/UnuOS/wiki/Collections), as a first-class feature.** Create `Collections/<name>.txt` on the SD card containing absolute ROM paths (one per line). The collection appears in the root launcher list and groups ROMs from any console into a single browsable list. Cover art (`Collections/.res/<name>.png`) is supported, with legacy `Collections/.res/<name>.txt.png` names supported as a fallback.
-- **[Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode).** Create `Collections/Selection.txt` on the SD card to show only the games listed in that collection. Settings, Tools, Collections, Recently Played, and system folders are hidden while the file exists.
+- **Favorites and [Game Focus Mode](https://github.com/retronian/UnuOS/wiki/Game-Focus-Mode).** Press `Y` on a game to add or remove it from Favorites. Press `SELECT` + `Y` to show only favorite games, then press `SELECT` + `Y` again to return to the normal launcher.
 - **[Native in-app screenshot](https://github.com/retronian/UnuOS/wiki/Screenshots).** Hold SELECT + press START anywhere in the launcher or during gameplay to write `Screenshots/YYYY-MM-DD_HH-MM-SS.bmp` to the SD card.
 - **Tools menu localization.** Bundled Tools entries (ADBD, Bootlogo, Clock, Files, Input, IP, Remove Loading, Toggle 560p) are shown with localized names instead of their raw `.pak` directory names.
 - **Boot logo tools.** Supported devices include a one-shot Bootlogo tool for flashing the bundled or user-supplied startup logo.

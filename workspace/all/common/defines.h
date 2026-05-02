@@ -19,13 +19,14 @@
 #define SHARED_USERDATA_PATH SDCARD_PATH "/.userdata/shared"
 #define PAKS_PATH SYSTEM_PATH "/paks"
 #define RECENT_PATH SHARED_USERDATA_PATH "/.unuos/recent.txt"
+#define FAVORITE_PATH SHARED_USERDATA_PATH "/.unuos/favorites.txt"
 #define SIMPLE_MODE_PATH SHARED_USERDATA_PATH "/enable-simple-mode"
 #define AUTO_RESUME_PATH SHARED_USERDATA_PATH "/.unuos/auto_resume.txt"
 #define AUTO_RESUME_SLOT 9
 
 #define FAUX_RECENT_PATH SDCARD_PATH "/Recently Played"
+#define FAUX_FAVORITE_PATH SDCARD_PATH "/Favorites"
 #define COLLECTIONS_PATH SDCARD_PATH "/Collections"
-#define SELECTION_COLLECTION_PATH COLLECTIONS_PATH "/Selection.txt"
 #define SETTINGS_PATH    SDCARD_PATH "/.unuos-settings" // virtual, never on disk
 
 #define LAST_PATH "/tmp/last.txt" // transient

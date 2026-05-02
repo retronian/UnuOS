@@ -36,6 +36,8 @@ These shortcuts apply while browsing games, folders, collections, tools, and Set
 | `A` | Open the selected item or launch the selected game |
 | `B` | Go back to the previous folder |
 | `X` | Resume the selected game, if a resume state is available |
+| `Y` | Add or remove the selected game from Favorites |
+| `SELECT` + `Y` | Toggle Game Focus Mode, showing only favorite games |
 | Tap `MENU` | Show or hide the launcher info screen |
 | `SELECT` + `START` | Save a screenshot |
 

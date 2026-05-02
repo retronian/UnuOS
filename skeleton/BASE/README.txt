@@ -206,7 +206,7 @@ A collection is just a text file containing an ordered list of full paths to rom
   /Roms/SNES (SFC)/Super Metroid.sfc
   /Roms/GBA/Metroid Fusion.gba
 
-To show only a selected set of games in the launcher, create "/Collections/Selection.txt" with the same format. When this file exists, Settings, Tools, Collections, Recently Played, and system folders are hidden.
+Press Y on a game in the launcher to add or remove it from Favorites. Press SELECT+Y to show only favorite games, and press SELECT+Y again to return to the normal launcher.
 
 ----------------------------------------
 Cover art
