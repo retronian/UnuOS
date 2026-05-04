@@ -620,6 +620,13 @@ static void saveFavorites(void) {
 		fclose(file);
 	}
 }
+static void saveFavoriteFocusMode(void) {
+	mkdir(SHARED_USERDATA_PATH "/.unuos", 0755);
+	putInt(FAVORITE_FOCUS_PATH, favorite_focus_mode);
+}
+static void loadFavoriteFocusMode(void) {
+	favorite_focus_mode = exists(FAVORITE_FOCUS_PATH) ? getInt(FAVORITE_FOCUS_PATH) : 0;
+}
 static int favoriteIndexOf(char* path) {
 	if (prefixMatch(SDCARD_PATH, path)) path += strlen(SDCARD_PATH);
 	return RecentArray_indexOf(favorites, path);
@@ -1096,6 +1103,7 @@ static Array* getRecents(void) {
 	return entries;
 }
 static Array* getFavorites(void) {
+	hasFavorites();
 	Array* entries = Array_new();
 	for (int i=0; i<favorites->count; i++) {
 		Recent* favorite = favorites->items[i];
@@ -1675,6 +1683,7 @@ static void rebuildTopDirectory(void) {
 }
 static void setFavoriteFocusMode(int enabled) {
 	favorite_focus_mode = enabled;
+	saveFavoriteFocusMode();
 	DirectoryArray_free(stack);
 	stack = Array_new();
 	top = NULL;
@@ -1796,8 +1805,9 @@ static void Menu_init(void) {
 	recents = Array_new();
 	favorites = Array_new();
 
-	openDirectory(SDCARD_PATH, 0);
-	loadLast(); // restore state when available
+	loadFavoriteFocusMode();
+	openDirectory(favorite_focus_mode ? FAUX_FAVORITE_PATH : SDCARD_PATH, 0);
+	if (!favorite_focus_mode) loadLast(); // restore state when available
 }
 static void Menu_quit(void) {
 	RecentArray_free(favorites);

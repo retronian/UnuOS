@@ -49,6 +49,7 @@ Japanese UI:
 - [Shortcuts](https://github.com/retronian/UnuOS/wiki/Shortcuts)
 - [Screenshots](https://github.com/retronian/UnuOS/wiki/Screenshots)
 - [Localization](https://github.com/retronian/UnuOS/wiki/Localization)
+- [Supported Devices](https://github.com/retronian/UnuOS/wiki/Supported-Devices)
 
 ## Additions from MinUI
 
@@ -92,11 +93,18 @@ UnuOS is a fork of [MinUI](https://github.com/shauninman/MinUI). The following a
 
 - Miyoo Mini
 - Miyoo Mini Plus
+- Miyoo A30
 - Miyoo Flip
 - Miyoo Mini Flip
 - Anbernic RG35XX Plus
 - Anbernic RG CubeXX
 - Anbernic RG 28XX
+- Trimui Smart
+- Trimui Smart Pro / Brick
+- Powkiddy RGB30
+- MagicX XU Mini M
+- MagicX Mini Zero 28
+- GKD Pixel
 
 ### Supported device/platform mapping
 

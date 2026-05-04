@@ -25,8 +25,11 @@ When Game Focus Mode is enabled, the launcher shows only favorite games.
 
 Press `SELECT` + `Y` again to return to the normal launcher.
 
+Game Focus Mode stays enabled or disabled after reboot until you toggle it again.
+
 ## Notes
 
 - Favorites are saved in `.userdata/shared/.unuos/favorites.txt`.
+- Game Focus Mode state is saved in `.userdata/shared/.unuos/favorite_focus.txt`.
 - Missing games are skipped.
 - Favorite order follows the order games were added.
