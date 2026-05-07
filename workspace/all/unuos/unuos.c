@@ -1885,7 +1885,7 @@ int main (int argc, char *argv[]) {
 				dirty = 1;
 				if (total>0) readyResume(top->entries->items[top->selected]);
 			}
-			else if (total>0 && PAD_justPressed(BTN_Y) && !PAD_isPressed(BTN_SELECT)) {
+			else if (!favorite_focus_mode && total>0 && PAD_justPressed(BTN_Y) && !PAD_isPressed(BTN_SELECT)) {
 				Entry* entry = top->entries->items[top->selected];
 				if (entry->type==ENTRY_ROM) {
 					toggleFavorite(entry);
@@ -2146,7 +2146,7 @@ int main (int argc, char *argv[]) {
 						SDL_Color text_color = COLOR_WHITE;
 					
 						trimSortingMeta(&entry_name);
-						int favorite = entry->type==ENTRY_ROM && isFavorite(entry->path);
+						int favorite = !favorite_focus_mode && entry->type==ENTRY_ROM && isFavorite(entry->path);
 						char marked_name[256];
 						char marked_unique[256];
 						if (favorite) {
