@@ -14,7 +14,7 @@ While browsing games in the launcher:
 
 | Shortcut | Action |
 | --- | --- |
-| `Y` | Add or remove the selected game from Favorites |
+| `Y` | Add or remove the selected game from Favorites in the normal launcher |
 | `SELECT` + `Y` | Toggle Game Focus Mode |
 
 Favorite games show a `★` mark before their name and appear in the `Favorites` root list.
@@ -22,6 +22,8 @@ Favorite games show a `★` mark before their name and appear in the `Favorites`
 ## What Changes
 
 When Game Focus Mode is enabled, the launcher shows only favorite games.
+
+Inside Game Focus Mode, favorite games are shown without the `★` mark and `Y` does not remove them from Favorites. Leave Game Focus Mode first if you want to edit Favorites.
 
 Press `SELECT` + `Y` again to return to the normal launcher.
 
