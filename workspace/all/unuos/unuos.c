@@ -1852,6 +1852,8 @@ int main (int argc, char *argv[]) {
 	int dirty = 1;
 	int show_version = 0;
 	int show_setting = 0; // 1=brightness,2=volume
+	unsigned long selected_changed_at = 0;
+	int thumbnail_drawn_for_selected = -1;
 	int was_online = PLAT_isOnline();
 	
 	// LOG_info("- loop start: %lu\n", SDL_GetTicks() - main_begin);
@@ -1994,6 +1996,8 @@ int main (int argc, char *argv[]) {
 	
 			if (selected!=top->selected) {
 				top->selected = selected;
+				selected_changed_at = now;
+				thumbnail_drawn_for_selected = -1;
 				dirty = 1;
 			}
 	
@@ -2019,6 +2023,8 @@ int main (int argc, char *argv[]) {
 				if (total>0) readyResume(top->entries->items[top->selected]);
 			}
 		}
+
+		if (!dirty && total>0 && thumbnail_drawn_for_selected!=top->selected && now-selected_changed_at>=120) dirty = 1;
 		
 		if (dirty) {
 			GFX_clear(screen);
@@ -2029,7 +2035,7 @@ int main (int argc, char *argv[]) {
 			// simple thumbnail support a thumbnail for a file or folder named NAME.EXT needs a corresponding /.res/NAME.png
 			// that is no bigger than platform FIXED_HEIGHT x FIXED_HEIGHT
 			int had_thumb = 0;
-			if (!show_version && total>0) {
+			if (!show_version && total>0 && now-selected_changed_at>=120) {
 				Entry* entry = top->entries->items[top->selected];
 				char res_path[MAX_PATH];
 				
@@ -2064,6 +2070,7 @@ int main (int argc, char *argv[]) {
 						SDL_FreeSurface(thumb);
 					}
 				}
+				thumbnail_drawn_for_selected = top->selected;
 			}
 			
 			int ow = GFX_blitHardwareGroup(screen, show_setting);
